@@ -1,0 +1,28 @@
+{
+    "name": "simbiat/fftracker",
+    "type": "library",
+    "keywords": ["php","array","helper"],
+    "description": "Set of useful functions to work with arrays",
+    "homepage": "https://github.com/Simbiat/ArrayHelpers",
+    "license": "AGPL-3.0-or-later",
+    "authors": [
+        {
+            "name": "Dmitry Kustov",
+            "email": "simbiat@outlook.com",
+            "homepage": "https://simbiat.ru",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": "^7.4"
+    },
+    "autoload": {
+        "psr-4": {
+            "ArrayHelpers\\": "src/"
+        }
+    },
+	"support": {
+		"issues": "https://github.com/Simbiat/ArrayHelpers/issues",
+		"source": "https://github.com/Simbiat/ArrayHelpers"
+	}
+}
