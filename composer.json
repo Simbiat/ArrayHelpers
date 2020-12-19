@@ -1,5 +1,5 @@
 {
-    "name": "simbiat/fftracker",
+    "name": "simbiat/ArrayHelpers",
     "type": "library",
     "keywords": ["php","array","helper"],
     "description": "Set of useful functions to work with arrays",
