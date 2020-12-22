@@ -98,7 +98,7 @@ class ArrayHelpers
         #Setting the empty array as precaution
         $newarray = [];
         #Iterrating the array provided
-        foreach ($oldarray as $oldkey=>$itme) {
+        foreach ($oldarray as $oldkey=>$item) {
             #Adding the element to new array
             $newarray[$oldkey] = $item[$keytosave];
         }
