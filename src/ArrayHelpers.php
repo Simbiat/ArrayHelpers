@@ -15,7 +15,7 @@ class ArrayHelpers
         }
         #If number of rows sent is <=0 or the amount of elements is lower than the number of rows x2, attempt to split evenly
         if ($rows <= 0 || count($array) < ($rows*2)) {
-            $rows = floor(count($array)/2);
+            $rows = intval(floor(count($array)/2));
         }
         $newarray['top'] = array_slice($array, 0, $rows);
         $newarray['bottom'] = array_reverse(array_slice($array, -$rows, $rows));
