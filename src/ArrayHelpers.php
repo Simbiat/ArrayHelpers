@@ -33,10 +33,11 @@ class ArrayHelpers
             throw new \InvalidArgumentException('Empty key provided to splitByKey function.');
         }
         if (empty($newkeys)) {
-            throw new \InvalidArgumentException('Empty array of new keys provided to splitByKey function.');
+            $newkeys = array_unique(array_column($array, $columnkey));
+            asort($newkeys, SORT_NATURAL);
         }
         if (empty($valuestocheck)) {
-            throw new \InvalidArgumentException('Empty array of expected values provided to splitByKey function.');
+            $valuestocheck = $newkeys;
         }
         #Checking that length of both keys and values is same
         if (count($newkeys) !== count($valuestocheck)) {
