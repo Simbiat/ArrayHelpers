@@ -107,7 +107,7 @@ class ArrayHelpers
     }
     
     #Function converts set of selected columns' values to chosen type (INT by default). Initially created due to MySQL enforcing string values instead of integers in a lot of cases.
-    public function ColumnsConversion(array $array, $columns, string $type = 'int'): array
+    public function ColumnsConversion(array $array, array|string $columns, string $type = 'int'): array
     {
         #Checking values
         if (empty($columns)) {
@@ -124,35 +124,23 @@ class ArrayHelpers
             #Iterrating columns' list provided
             foreach ($columns as $column) {
                 #Converting element based on the type
-                switch (strtolower($type)) {
-                    case 'int':
-                    case 'integer':
-                        $array[$key][$column] = (int)$value[$column]; break;
-                    case 'bool':
-                    case 'boolean':
-                        $array[$key][$column] = (bool)$value[$column]; break;
-                    case 'float':
-                    case 'double':
-                    case 'real':
-                        $array[$key][$column] = (float)$value[$column]; break;
-                    case 'string':
-                        $array[$key][$column] = (string)$value[$column]; break;
-                    case 'array':
-                        $array[$key][$column] = (array)$value[$column]; break;
-                    case 'object':
-                        $array[$key][$column] = (object)$value[$column]; break;
-                    case 'uncset':
-                    case 'null':
-                    case 'nothing':
-                        $array[$key][$column] = NULL; break;
-                }
+                $array[$key][$column] = match($type) {
+                    'int', 'integer' => (int)$value[$column],
+                    'bool', 'boolean' => (bool)$value[$column],
+                    'float', 'double', 'real' => (float)$value[$column],
+                    'string' => (string)$value[$column],
+                    'array' => (array)$value[$column],
+                    'object' => (object)$value[$column],
+                    'uncset', 'null', 'nothing' => NULL,
+                    default => NULL,
+                };
             }
         }
         return $array;
     }
     
     #Simple function, that removes all elements with certain value and optionally rekeys it (useful for indexed array, useless for assotiative ones)
-    public function RemoveByValue(array $array, $remvalue, bool $strict = true, bool $rekey = false): array
+    public function RemoveByValue(array $array, mixed $remvalue, bool $strict = true, bool $rekey = false): array
     {
         #Iterrating the array provided
         foreach ($array as $key=>$value) {
