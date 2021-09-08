@@ -210,4 +210,38 @@ class ArrayHelpers
     	}
     	return $array;
     }
+
+    #Function to convert DOMNode into array with set of attributes, present in the node
+    #$null will replace empty strings with NULL, if set to true
+    #$extraAttributes will add any missing attributes as NULL or empty strings. Useful for standartization
+    public function attributesToArray(\DOMNode $node, bool $null = true, array $extraAttributes = []): array
+    {
+        $result = [];
+        #Iterrate attributes of the node
+        foreach ($node->attributes as $attrName => $attrValue) {
+            if ($null && $attrValue === '') {
+                #Add to resulting array as NULL, if it's empty string
+                $result[$attrName] = NULL;
+            } else {
+                #Add actual value
+                $result[$attrName] = $attrValue->textContent;
+            }
+        }
+        #Add any additional attributes, that are expected
+        if (!empty($extraAttributes)) {
+            foreach ($extraAttributes as $attribute) {
+                if (!isset($result[$attribute])) {
+                    if ($null) {
+                        #Add as NULL
+                        $result[$attribute] = NULL;
+                    } else {
+                        #Or add as empty string
+                        $result[$attribute] = '';
+                    }
+                }
+            }
+        }
+        #Return resulting string
+        return $result;
+    }
 }
