@@ -244,4 +244,33 @@ class ArrayHelpers
         #Return resulting string
         return $result;
     }
+
+    #Function to move keys into a subarray.
+    #For example, you have a key like $array['key'], but you want to remove it and have it as $array['subarray']['key'] - then use this function
+    #Purely for data formatting.
+    #$newKeyPath should be an array where each key is part of a new path ($array['new', 'path'] is meant to be converted to result in $array['new']['path'])/
+    public function moveToSubarray(array &$array, string|int $key, array $newKeyPath): void
+    {
+        #Modify only if key exists
+        if (isset($array[$key])) {
+            #Copy the value
+            $this->setKeyPath($array, $newKeyPath, $array[$key]);
+            #Remove original key
+            unset($array[$key]);
+        }
+    }
+
+    #Allows to recursively set a key path. Taken from https://stackoverflow.com/a/24131246/2992851
+    public function setKeyPath(&$array, $path, $value): void
+    {
+        $key = array_shift($path);
+        if (empty($path)) {
+            $array[$key] = $value;
+        } else {
+            if (!isset($array[$key]) || !is_array($array[$key])) {
+                $array[$key] = [];
+            }
+            $this->setKeyPath($array[$key], $path, $value);
+        }
+    }
 }
