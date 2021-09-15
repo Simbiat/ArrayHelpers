@@ -252,7 +252,7 @@ class ArrayHelpers
     public function moveToSubarray(array &$array, string|int $key, array $newKeyPath): void
     {
         #Modify only if key exists
-        if (isset($array[$key])) {
+        if (array_key_exists($key, $array)) {
             #Copy the value
             $this->setKeyPath($array, $newKeyPath, $array[$key]);
             #Remove original key
@@ -260,14 +260,14 @@ class ArrayHelpers
         }
     }
 
-    #Allows to recursively set a key path. Taken from https://stackoverflow.com/a/24131246/2992851
+    #Allows to recursively set a key path. Based on https://stackoverflow.com/a/5821027/2992851
     public function setKeyPath(&$array, $path, $value): void
     {
         $key = array_shift($path);
         if (empty($path)) {
             $array[$key] = $value;
         } else {
-            if (!isset($array[$key]) || !is_array($array[$key])) {
+            if (!array_key_exists($key, $array) || !is_array($array[$key])) {
                 $array[$key] = [];
             }
             $this->setKeyPath($array[$key], $path, $value);
