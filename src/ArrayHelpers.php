@@ -275,7 +275,7 @@ class ArrayHelpers
     }
 
     #Rename column in array
-    private function renameColumn(array &$array, string $column, string $keyName): void
+    public function renameColumn(array &$array, string $column, string $keyName): void
     {
         foreach($array as $key=>$row) {
             $array[$key][$keyName] = $row[$column];
