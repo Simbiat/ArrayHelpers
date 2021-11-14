@@ -72,7 +72,7 @@ class ArrayHelpers
         return $newArray;
     }
 
-    #Function allows to turn regular arrays (keyed 0, 1, 2, ... n) to associative one using values from the column provided as 2nd argument. Has option to remove that column from new arrays. Useful for structuring results from some complex SELECT, when you know that each row returned is a separate entity
+    #Function allows turning regular arrays (keyed 0, 1, 2, ... n) to associative one using values from the column provided as 2nd argument. Has option to remove that column from new arrays. Useful for structuring results from some complex SELECT, when you know that each row returned is a separate entity
     public function DigitToKey(array $oldArray, string $newKey, bool $keyUnset = false): array
     {
         if (empty($newKey)) {
@@ -92,7 +92,7 @@ class ArrayHelpers
         return $newArray;
     }
 
-    #Function allows to turn multidimensional arrays to regular ones by "overwriting" each "row" with value from chosen column
+    #Function allows turning multidimensional arrays to regular ones by "overwriting" each "row" with value from chosen column
     public function MultiToSingle(array $oldArray, string $keyToSave): array
     {
         if (empty($keyToSave)) {
@@ -213,7 +213,7 @@ class ArrayHelpers
 
     #Function to convert DOMNode into array with set of attributes, present in the node
     #$null will replace empty strings with NULL, if set to true
-    #$extraAttributes will add any missing attributes as NULL or empty strings. Useful for standartization
+    #$extraAttributes will add any missing attributes as NULL or empty strings. Useful for standardization
     public function attributesToArray(\DOMNode $node, bool $null = true, array $extraAttributes = []): array
     {
         $result = [];
@@ -261,7 +261,7 @@ class ArrayHelpers
     }
 
     #Allows to recursively set a key path. Based on https://stackoverflow.com/a/5821027/2992851
-    public function setKeyPath(&$array, $path, $value): void
+    public function setKeyPath(array &$array, array $path, mixed $value): void
     {
         $key = array_shift($path);
         if (empty($path)) {
@@ -271,6 +271,15 @@ class ArrayHelpers
                 $array[$key] = [];
             }
             $this->setKeyPath($array[$key], $path, $value);
+        }
+    }
+
+    #Rename column in array
+    private function renameColumn(array &$array, string $column, string $keyName): void
+    {
+        foreach($array as $key=>$row) {
+            $array[$key][$keyName] = $row[$column];
+            unset($array[$key][$column]);
         }
     }
 }
