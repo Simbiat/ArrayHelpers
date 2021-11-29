@@ -282,4 +282,17 @@ class ArrayHelpers
             unset($array[$key][$column]);
         }
     }
+
+    #Convert a regular array into multidimensional one by turning keys into one of the columns
+    public function toMultiArray(array $array, array $keys): array
+    {
+        if (count($keys) !== 2) {
+            throw new \UnexpectedValueException('Number of keys provided does not equal 2');
+        }
+        $newArray = [];
+        foreach ($array as $key=>$element) {
+            $newArray[] = [$keys[0] => $key, $keys[1] => $element];
+        }
+        return $newArray;
+    }
 }
