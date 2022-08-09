@@ -5,7 +5,7 @@ namespace Simbiat;
 class ArrayHelpers
 {
     #Function that splits the array to 2 representing first X and last X rows from it, providing a way to get 'Top X' and its counterpart
-    public function topAndBottom(array $array, int $rows = 0): array
+    public static function topAndBottom(array $array, int $rows = 0): array
     {
         if (empty($array)) {
             throw new \InvalidArgumentException('Empty array provided to topAndBottom function.');
@@ -23,7 +23,7 @@ class ArrayHelpers
     }
 
     #Useful to reduce number of travels to database. Instead of doing 2+ queries separately, we do just 1 query and then split it to several arrays in code
-    public function splitByKey(array $array, string $columnKey, array $newKeys, array $valuesToCheck): array
+    public static function splitByKey(array $array, string $columnKey, array $newKeys, array $valuesToCheck): array
     {
         #Predefine empty array
         $newArray = [];
@@ -73,7 +73,7 @@ class ArrayHelpers
     }
 
     #Function allows turning regular arrays (keyed 0, 1, 2, ... n) to associative one using values from the column provided as 2nd argument. Has option to remove that column from new arrays. Useful for structuring results from some complex SELECT, when you know that each row returned is a separate entity
-    public function DigitToKey(array $oldArray, string $newKey, bool $keyUnset = false): array
+    public static function DigitToKey(array $oldArray, string $newKey, bool $keyUnset = false): array
     {
         if (empty($newKey)) {
             throw new \InvalidArgumentException('Empty key provided to DigitToKey function.');
@@ -93,7 +93,7 @@ class ArrayHelpers
     }
 
     #Function allows turning multidimensional arrays to regular ones by "overwriting" each "row" with value from chosen column
-    public function MultiToSingle(array $oldArray, string $keyToSave): array
+    public static function MultiToSingle(array $oldArray, string $keyToSave): array
     {
         if (empty($keyToSave)) {
             throw new \InvalidArgumentException('Empty key provided to MultiToSingle function.');
@@ -109,7 +109,7 @@ class ArrayHelpers
     }
 
     #Function converts set of selected columns' values to chosen type (INT by default). Initially created due to MySQL enforcing string values instead of integers in a lot of cases.
-    public function ColumnsConversion(array $array, array|string $columns, string $type = 'int'): array
+    public static function ColumnsConversion(array $array, array|string $columns, string $type = 'int'): array
     {
         #Checking values
         if (empty($columns)) {
@@ -141,7 +141,7 @@ class ArrayHelpers
     }
 
     #Simple function, that removes all elements with certain value and optionally re-keys it (useful for indexed array, useless for associative ones)
-    public function RemoveByValue(array $array, mixed $remValue, bool $strict = true, bool $reKey = false): array
+    public static function RemoveByValue(array $array, mixed $remValue, bool $strict = true, bool $reKey = false): array
     {
         #Iterrating the array provided
         foreach ($array as $key=>$value) {
@@ -158,7 +158,7 @@ class ArrayHelpers
     }
 
     #Function to sort a multidimensional array by values in column. Can be `reversed` to sort from larger to smaller (DESC order)
-    public function MultiArrSort(array $array, string $column, bool $desc = false): array
+    public static function MultiArrSort(array $array, string $column, bool $desc = false): array
     {
         if (empty($column)) {
             throw new \InvalidArgumentException('Empty key (column) provided to MultiArrSort function.');
@@ -180,7 +180,7 @@ class ArrayHelpers
     #Function to convert DBASE (.dbf) file to array
     #Supressing inspection for functions related to DBase, since we have our own handler of lack of DBase extension
     /** @noinspection PhpUndefinedFunctionInspection */
-    public function dbfToArray(string $file): array
+    public static function dbfToArray(string $file): array
     {
         if (!file_exists($file)) {
             throw new \UnexpectedValueException('File \''.$file.'\' provided to dbfToArray function is not found.');
@@ -214,7 +214,7 @@ class ArrayHelpers
     #Function to convert DOMNode into array with set of attributes, present in the node
     #$null will replace empty strings with NULL, if set to true
     #$extraAttributes will add any missing attributes as NULL or empty strings. Useful for standardization
-    public function attributesToArray(\DOMNode $node, bool $null = true, array $extraAttributes = []): array
+    public static function attributesToArray(\DOMNode $node, bool $null = true, array $extraAttributes = []): array
     {
         $result = [];
         #Iterrate attributes of the node
@@ -249,19 +249,19 @@ class ArrayHelpers
     #For example, you have a key like $array['key'], but you want to remove it and have it as $array['subarray']['key'] - then use this function
     #Purely for data formatting.
     #$newKeyPath should be an array where each key is part of a new path ($array['new', 'path'] is meant to be converted to result in $array['new']['path'])/
-    public function moveToSubarray(array &$array, string|int $key, array $newKeyPath): void
+    public static function moveToSubarray(array &$array, string|int $key, array $newKeyPath): void
     {
         #Modify only if key exists
         if (array_key_exists($key, $array)) {
             #Copy the value
-            $this->setKeyPath($array, $newKeyPath, $array[$key]);
+            self::setKeyPath($array, $newKeyPath, $array[$key]);
             #Remove original key
             unset($array[$key]);
         }
     }
 
     #Allows to recursively set a key path. Based on https://stackoverflow.com/a/5821027/2992851
-    public function setKeyPath(array &$array, array $path, mixed $value): void
+    public static function setKeyPath(array &$array, array $path, mixed $value): void
     {
         $key = array_shift($path);
         if (empty($path)) {
@@ -270,12 +270,12 @@ class ArrayHelpers
             if (!array_key_exists($key, $array) || !is_array($array[$key])) {
                 $array[$key] = [];
             }
-            $this->setKeyPath($array[$key], $path, $value);
+            self::setKeyPath($array[$key], $path, $value);
         }
     }
 
     #Rename column in array
-    public function renameColumn(array &$array, string $column, string $keyName): void
+    public static function renameColumn(array &$array, string $column, string $keyName): void
     {
         foreach($array as $key=>$row) {
             $array[$key][$keyName] = $row[$column];
@@ -284,7 +284,7 @@ class ArrayHelpers
     }
 
     #Convert a regular array into multidimensional one by turning keys into one of the columns
-    public function toMultiArray(array $array, array $keys): array
+    public static function toMultiArray(array $array, array $keys): array
     {
         if (count($keys) !== 2) {
             throw new \UnexpectedValueException('Number of keys provided does not equal 2');
