@@ -15,7 +15,7 @@ class ArrayHelpers
         }
         #If number of rows sent is <=0 or the amount of elements is lower than the number of rows x2, attempt to split evenly
         if ($rows <= 0 || count($array) < ($rows*2)) {
-            $rows = intval(floor(count($array)/2));
+            $rows = (int)floor(count($array) / 2);
         }
         $newArray['top'] = array_slice($array, 0, $rows);
         $newArray['bottom'] = array_reverse(array_slice($array, -$rows, $rows));
@@ -49,12 +49,11 @@ class ArrayHelpers
         foreach ($newKeys as $arrKey=>$newKey) {
             if (empty($newKey)) {
                 throw new \UnexpectedValueException('New key with index value \''.$arrKey.'\' is empty and cannot be used as key for new array by splitByKey function.');
+            }
+            if (is_string($newKey) || is_int($newKey)) {
+                $newArray[$newKey] = [];
             } else {
-                if (is_string($newKey) || is_int($newKey)) {
-                    $newArray[$newKey] = [];
-                } else {
-                    throw new \UnexpectedValueException('New key with index value \''.$arrKey.'\' is neither string nor integer and cannot be used as key for new array by splitByKey function.');
-                }
+                throw new \UnexpectedValueException('New key with index value \''.$arrKey.'\' is neither string nor integer and cannot be used as key for new array by splitByKey function.');
             }
         }
         #Combine keys and values for easier identification, where a value should go to new array
@@ -62,7 +61,7 @@ class ArrayHelpers
         foreach ($valuesToCheck as $key=> $value) {
             foreach ($array as $item) {
                 #Value in item
-                if ($item[$columnKey] == $value) {
+                if ($item[$columnKey] === $value) {
                     #Remove column key, since it's not required after this
                     unset($item[$columnKey]);
                     $newArray[$key][] = $item;
@@ -85,7 +84,7 @@ class ArrayHelpers
             #Adding the element to new array
             $newArray[$item[$newKey]] = $item;
             #Removing old column
-            if ($keyUnset == true) {
+            if ($keyUnset === true) {
                 unset($newArray[$item[$newKey]][$newKey]);
             }
         }
@@ -146,7 +145,7 @@ class ArrayHelpers
         #Iterrating the array provided
         foreach ($array as $key=>$value) {
             #Compare either strictly or not, depending on the flag provided
-            if (($strict === true && $value === $remValue) || ($strict === false && $value == $remValue)) {
+            if (($strict === true && $value === $remValue) || ($strict === false && $value === $remValue)) {
                 unset($array[$key]);
             }
         }
@@ -165,12 +164,12 @@ class ArrayHelpers
         }
         if ($desc === true) {
             #Order in DESC
-            uasort($array, function($a, $b) use(&$column) {
+            uasort($array, static function($a, $b) use(&$column) {
                     return $b[$column] <=> $a[$column];
             });
         } else {
             #Order in ASC
-            uasort($array, function($a, $b) use(&$column) {
+            uasort($array, static function($a, $b) use(&$column) {
                     return $a[$column] <=> $b[$column];
             });
         }
@@ -191,24 +190,24 @@ class ArrayHelpers
         #Setting the empty array as precaution
         $array = [];
         #Open file for reading
-	    $dbf = dbase_open($file, 0);
-	    if ($dbf !== false) {
-	        #Get number of records in file
-    		$record_numbers = dbase_numrecords($dbf);
-    		if ($record_numbers === false) {
-    		    throw new \RuntimeException('Failed to get number of records in \''.$file.'\' provided to dbfToArray function.');
-    		}
-    		#Iterrate the records
-    		for ($i = 1; $i <= $record_numbers; $i++) {
-    			#Add record to array
-    			$array[] = dbase_get_record_with_names($dbf, $i);
-    		}
-    		#Close file
-    		dbase_close($dbf);
-    	} else {
-    	    throw new \RuntimeException('Failed to open \''.$file.'\' provided to dbfToArray function.');
-    	}
-    	return $array;
+        $dbf = dbase_open($file, 0);
+        if ($dbf !== false) {
+            #Get number of records in file
+            $record_numbers = dbase_numrecords($dbf);
+            if ($record_numbers === false) {
+                throw new \RuntimeException('Failed to get number of records in \''.$file.'\' provided to dbfToArray function.');
+            }
+            #Iterrate the records
+            for ($i = 1; $i <= $record_numbers; $i++) {
+                #Add record to array
+                $array[] = dbase_get_record_with_names($dbf, $i);
+            }
+            #Close file
+            dbase_close($dbf);
+        } else {
+            throw new \RuntimeException('Failed to open \''.$file.'\' provided to dbfToArray function.');
+        }
+        return $array;
     }
 
     #Function to convert DOMNode into array with set of attributes, present in the node
