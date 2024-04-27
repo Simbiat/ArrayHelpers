@@ -23,7 +23,8 @@ class ArrayHelpers
     }
 
     #Useful to reduce number of travels to database. Instead of doing 2+ queries separately, we do just 1 query and then split it to several arrays in code
-    public static function splitByKey(array $array, string $columnKey, array $newKeys, array $valuesToCheck): array
+    #If required you can send list of keys, that you expect, which can work as a filter
+    public static function splitByKey(array $array, string $columnKey, array $newKeys = [], array $valuesToCheck = [], bool $keepKey = false, bool $caseInsensitive = false): array
     {
         #Predefine empty array
         $newArray = [];
@@ -37,6 +38,15 @@ class ArrayHelpers
         if (empty($newKeys)) {
             $newKeys = array_unique(array_column($array, $columnKey));
             asort($newKeys, SORT_NATURAL);
+        }
+        #If we use case-insensitive comparison, we need to ensure standardized keys and lack of duplicates
+        if ($caseInsensitive) {
+            foreach ($newKeys as $key => $value) {
+                if (!is_numeric($value)) {
+                    $newKeys[$key] = mb_strtolower($value, 'UTF-8');
+                }
+            }
+            $newKeys = array_unique($newKeys, SORT_NATURAL);
         }
         if (empty($valuesToCheck)) {
             $valuesToCheck = $newKeys;
@@ -58,13 +68,22 @@ class ArrayHelpers
         }
         #Combine keys and values for easier identification, where a value should go to new array
         $valuesToCheck = array_combine($newKeys, $valuesToCheck);
-        foreach ($valuesToCheck as $key=> $value) {
+        foreach ($valuesToCheck as $key=>$value) {
             foreach ($array as $item) {
+                #Standardize keys, in case we are using case-insensitive comparison, and neither of them is numeric
+                if ($caseInsensitive && !is_numeric($item[$columnKey]) && !is_numeric($value)) {
+                    $keyToCompare = mb_strtolower($item[$columnKey], 'UTF-8');
+                    $value = mb_strtolower($value, 'UTF-8');
+                } else {
+                    $keyToCompare = $item[$columnKey];
+                }
                 #Value in item
-                if ($item[$columnKey] === $value) {
+                if ($keyToCompare === $value) {
                     #Remove column key, since it's not required after this
-                    unset($item[$columnKey]);
-                    $newArray[$key][] = $item;
+                    if (!$keepKey) {
+                        unset($item[ $columnKey ]);
+                    }
+                    $newArray[ $key ][] = $item;
                 }
             }
         }
