@@ -91,13 +91,13 @@ class ArrayHelpers
         foreach ($newArray as $key => $value) {
             foreach ($array as $item) {
                 #Standardize keys, in case we are using case-insensitive comparison
-                if ($caseInsensitive && is_string($item[$columnKey]) && is_string($value)) {
+                if ($caseInsensitive && is_string($item[$columnKey]) && is_string($key)) {
                     $keyToCompare = mb_strtolower($item[$columnKey], 'UTF-8');
                 } else {
                     $keyToCompare = $item[$columnKey];
                 }
-                #Value in item
-                if ($keyToCompare === $value) {
+                #Compare values
+                if ($keyToCompare === $key) {
                     #Remove column key, since it's not required after this
                     if (!$keepKey) {
                         unset($item[$columnKey]);
