@@ -435,34 +435,28 @@ class ArrayHelpers
             if ($equalLength) {
                 if (count(array_unique(array_map('\count', $array))) !== 1) {
                     throw new \UnexpectedValueException('Not all child arrays have same length.');
-                } else {
-                    return true;
                 }
-            } else {
                 return true;
             }
-        } else {
-            #Check that all values are scalars
-            if ($allScalar && self::isAllScalar($array) === false) {
-                throw new \UnexpectedValueException('Array contains both scalar and non-scalar values.');
-            }
-            return false;
+            return true;
         }
+        #Check that all values are scalars
+        if ($allScalar && self::isAllScalar($array) === false) {
+            throw new \UnexpectedValueException('Array contains both scalar and non-scalar values.');
+        }
+        return false;
     }
     
     /**
      * Check if all values of an array are scalar
      *
-     * @param array $array       Array to check
+     * @param array $array Array to check
      *
      * @return bool
      */
     public static function isAllScalar(array $array): bool
     {
         #Check that all values are scalars
-        if (count(array_filter(array_values($array), 'is_scalar')) !== count($array)) {
-            return false;
-        }
-        return true;
+        return (count(array_filter(array_values($array), '\is_scalar')) === count($array));
     }
 }
