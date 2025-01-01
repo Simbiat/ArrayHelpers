@@ -77,7 +77,7 @@ class ArrayHelpers
                 throw new \UnexpectedValueException('New key with index value \''.$arrKey.'\' is empty and cannot be used as key for new array by splitByKey function.');
             }
             if (\is_int($newKey)) {
-                $newArray[$newKey] = [];
+                $newArray[(string)$newKey] = [];
             } elseif (is_string($newKey)) {
                 if ($caseInsensitive) {
                     $newArray[mb_strtolower($newKey, 'UTF-8')] = [];
@@ -94,10 +94,10 @@ class ArrayHelpers
                 if ($caseInsensitive && is_string($item[$columnKey]) && is_string($key)) {
                     $keyToCompare = mb_strtolower($item[$columnKey], 'UTF-8');
                 } else {
-                    $keyToCompare = $item[$columnKey];
+                    $keyToCompare = (string)$item[$columnKey];
                 }
-                #Compare values
-                if ($keyToCompare === $key) {
+                #Compare values. Need to force $key to be a string, because if a *value* was an integer PHP will automatically treat the key as one, and not as a string with numeric values
+                if ($keyToCompare === (string)$key) {
                     #Remove column key, since it's not required after this
                     if (!$keepKey) {
                         unset($item[$columnKey]);
