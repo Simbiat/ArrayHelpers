@@ -409,8 +409,7 @@ class ArrayHelpers
      */
     public static function isAssociative(array $array): bool
     {
-        $keys = array_keys($array);
-        foreach ($keys as $key) {
+        foreach (array_keys($array) as $key) {
             if (is_string($key)) {
                 return true;
             }
@@ -458,5 +457,31 @@ class ArrayHelpers
     {
         #Check that all values are scalars
         return (count(array_filter(array_values($array), '\is_scalar')) === count($array));
+    }
+    
+    /**
+     * Convert an array to object properties
+     *
+     * @param object $object Object to update
+     * @param array  $array  Array of properties
+     * @param array  $skip   Properties to skip
+     * @param bool   $strict Whether property needs to exist
+     *
+     * @return void
+     */
+    public static function arrayToProperties(object $object, array $array, array $skip = [], bool $strict = true): void
+    {
+        #Iterrate the array
+        foreach ($array as $key => $value) {
+            #Check that key is string and not in list of keys to skip
+            if (is_string($key) && !\in_array($key, $skip, true)) {
+                #Throw an error if a property does not exist, and we use a strict mode
+                if ($strict && property_exists($object, $key) !== true) {
+                    throw new \LogicException(\get_class($object).' must have declared `'.$key.'` property.');
+                }
+                #Set property (or, at least, attempt to)
+                $object->{$key} = $value;
+            }
+        }
     }
 }
