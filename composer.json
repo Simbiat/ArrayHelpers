@@ -23,7 +23,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Simbiat\\": "src/"
+            "Simbiat\\Arrays\\": "src/"
         }
     },
     "support": {
