@@ -46,7 +46,7 @@ class Converters
         if (!file_exists($file)) {
             throw new \UnexpectedValueException('File \''.$file.'\' provided to dbfToArray function is not found.');
         }
-        if (\extension_loaded('dbase') === false) {
+        if (!\extension_loaded('dbase')) {
             throw new \RuntimeException('dbase extension required for dbfToArray function is not loaded.');
         }
         #Setting the empty array as precaution
@@ -147,7 +147,7 @@ class Converters
             #Check that key is string and not in list of keys to skip
             if (is_string($key) && !\in_array($key, $skip, true)) {
                 #Throw an error if a property does not exist, and we use a strict mode
-                if ($strict && property_exists($object, $key) !== true) {
+                if ($strict && !property_exists($object, $key)) {
                     throw new \LogicException(\get_class($object).' must have declared `'.$key.'` property.');
                 }
                 #Set property (or, at least, attempt to)

@@ -34,7 +34,7 @@ class Checkers
             return true;
         }
         #Check that all values are scalars
-        if ($allScalar && self::isAllScalar($array) === false) {
+        if ($allScalar && !self::isAllScalar($array)) {
             throw new \UnexpectedValueException('Array contains both scalar and non-scalar values.');
         }
         return false;
@@ -49,12 +49,7 @@ class Checkers
      */
     public static function isAssociative(array $array): bool
     {
-        foreach (array_keys($array) as $key) {
-            if (is_string($key)) {
-                return true;
-            }
-        }
-        return false;
+        return array_any(array_keys($array), static fn($key) => is_string($key));
     }
     
     /**

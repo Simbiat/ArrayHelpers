@@ -21,7 +21,7 @@ class Sorters
         if (empty($column)) {
             throw new \InvalidArgumentException('Empty key (column) provided to MultiArrSort function.');
         }
-        if ($desc === true) {
+        if ($desc) {
             #Order in DESC
             uasort($array, static function ($a, $b) use (&$column) {
                 return $b[$column] <=> $a[$column];

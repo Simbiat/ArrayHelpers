@@ -97,7 +97,7 @@ class Editors
             }
         }
         #Rekey the array
-        if ($reKey === true) {
+        if ($reKey) {
             $array = array_values($array);
         }
         return $array;
