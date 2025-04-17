@@ -12,10 +12,10 @@ use function is_string;
 class Checkers
 {
     /**
-     * Check if array is multidimensional
+     * Check if an array is multidimensional
      *
      * @param array $array       Array to check
-     * @param bool  $equalLength Whether to check that all rows are of same length
+     * @param bool  $equalLength Whether to check that all rows are of the same length
      * @param bool  $allScalar   Whether to check that all values are scalar
      *
      * @return bool
@@ -24,7 +24,7 @@ class Checkers
     {
         #Check if multidimensional
         if (count(array_filter(array_values($array), '\is_array')) === count($array)) {
-            #Check if all child arrays have same length
+            #Check if all child arrays have the same length
             if ($equalLength) {
                 if (count(array_unique(array_map('\count', $array))) !== 1) {
                     throw new \UnexpectedValueException('Not all child arrays have same length.');
@@ -41,7 +41,7 @@ class Checkers
     }
     
     /**
-     * Check if array is associative
+     * Check if an array is associative
      *
      * @param array $array
      *

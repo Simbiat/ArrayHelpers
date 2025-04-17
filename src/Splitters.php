@@ -25,7 +25,7 @@ class Splitters
         if (count($array) === 1) {
             throw new \UnexpectedValueException('Array provided to topAndBottom function contains only 1 element.');
         }
-        #If number of rows sent is <=0 or the amount of elements is lower than the number of rows x2, attempt to split evenly
+        #If the number of rows sent is <=0 or the number of elements is lower than the number of rows x2, attempt to split evenly
         if ($rows <= 0 || count($array) < ($rows * 2)) {
             $rows = (int)floor(count($array) / 2);
         }
@@ -35,12 +35,12 @@ class Splitters
     }
     
     /**
-     * Useful to reduce number of travels to database. Instead of doing 2+ queries separately, we do just 1 query and then split it to several arrays in code.
-     * If required you can send list of keys, that you expect, which can work as a filter.
+     * Useful to reduce the number of travels to a database. Instead of doing 2+ queries separately, we do just 1 query and then split it to several arrays in code.
+     * If required, you can send a list of keys that you expect, which can work as a filter.
      *
      * @param array  $array           Array to process.
      * @param string $columnKey       Column key to split by.
-     * @param array  $newKeys         Optional list of expected new keys (that is values from the column). Can be used to essentially filter results. If empty unique key values from the array will be used.
+     * @param array  $newKeys         Optional list of expected new keys (that is values from the column). Can be used to essentially filter results. If empty, unique key values from the array will be used.
      * @param bool   $keepKey         Whether to retain the original key in the resulting array or not
      * @param bool   $caseInsensitive Whether to do case-sensitive comparison of the values or not.
      *
@@ -70,7 +70,7 @@ class Splitters
             }
             $newKeys = array_unique($newKeys, SORT_NATURAL);
         }
-        #Prepare empty array
+        #Prepare an empty array
         foreach ($newKeys as $arrKey => $newKey) {
             if (empty($newKey)) {
                 throw new \UnexpectedValueException('New key with index value \''.$arrKey.'\' is empty and cannot be used as key for new array by splitByKey function.');
@@ -95,9 +95,9 @@ class Splitters
                 } else {
                     $keyToCompare = (string)$item[$columnKey];
                 }
-                #Compare values. Need to force $key to be a string, because if a *value* was an integer PHP will automatically treat the key as one, and not as a string with numeric values
+                #Compare values. Need to force $key to be a string, because if a *value* was an integer, PHP will automatically treat the key as one, and not as a string with numeric values
                 if ($keyToCompare === (string)$key) {
-                    #Remove column key, since it's not required after this
+                    #Remove the column key, since it's not required after this
                     if (!$keepKey) {
                         unset($item[$columnKey]);
                     }

@@ -23,20 +23,20 @@ class Converters
         if (empty($keyToSave)) {
             throw new \InvalidArgumentException('Empty key provided to MultiToSingle function.');
         }
-        #Setting the empty array as precaution
+        #Setting the empty array as a precaution
         $newArray = [];
         #Iterrating the array provided
         foreach ($oldArray as $oldKey => $item) {
-            #Adding the element to new array
+            #Adding the element to the new array
             $newArray[$oldKey] = $item[$keyToSave];
         }
         return $newArray;
     }
     
-    #Supressing inspection for functions related to DBase, since we have our own handler of lack of DBase extension
+    #Supressing inspection for functions related to DBase, since we have our own handler logic for this
     /** @noinspection PhpUndefinedFunctionInspection */
     /**
-     * Function to convert DBASE (.dbf) file to array
+     * Function to convert a DBASE (.dbf) file to array
      * @param string $file
      *
      * @return array
@@ -49,12 +49,12 @@ class Converters
         if (!\extension_loaded('dbase')) {
             throw new \RuntimeException('dbase extension required for dbfToArray function is not loaded.');
         }
-        #Setting the empty array as precaution
+        #Setting the empty array as a precaution
         $array = [];
-        #Open file for reading
+        #Open the file for reading
         $dbf = dbase_open($file, 0);
         if ($dbf !== false) {
-            #Get number of records in file
+            #Get the number of records in the file
             $record_numbers = dbase_numrecords($dbf);
             if ($record_numbers === false) {
                 throw new \RuntimeException('Failed to get number of records in \''.$file.'\' provided to dbfToArray function.');
@@ -73,7 +73,7 @@ class Converters
     }
     
     /**
-     * Function to convert DOMNode into array with set of attributes, present in the node
+     * Function to convert DOMNode into an array with a set of attributes, present in the node
      * @param \DOMNode $node            Node to process
      * @param bool     $null            Whether to replace empty strings with NULL
      * @param array    $extraAttributes List of attributes to add as either `null` (if `$null` is `true`) or empty string, if the attribute is missing
@@ -86,14 +86,14 @@ class Converters
         #Iterrate attributes of the node
         foreach ($node->attributes as $attrName => $attrValue) {
             if ($null && $attrValue === '') {
-                #Add to resulting array as NULL, if it's empty string
+                #Add to the resulting array as NULL if it's an empty string
                 $result[$attrName] = NULL;
             } else {
                 #Add actual value
                 $result[$attrName] = $attrValue->textContent;
             }
         }
-        #Add any additional attributes, that are expected
+        #Add any additional attributes that are expected
         if (!empty($extraAttributes)) {
             foreach ($extraAttributes as $attribute) {
                 if (!isset($result[$attribute])) {
@@ -112,7 +112,7 @@ class Converters
     }
     
     /**
-     * Convert a regular array into multidimensional one by turning keys into one of the columns
+     * Convert a regular array into a multidimensional one by turning keys into one of the columns
      * @param array $array Array to process
      * @param array $keys  New keys' names
      *
@@ -144,7 +144,7 @@ class Converters
     {
         #Iterrate the array
         foreach ($array as $key => $value) {
-            #Check that key is string and not in list of keys to skip
+            #Check that a key is string and not in the list of keys to skip
             if (is_string($key) && !\in_array($key, $skip, true)) {
                 #Throw an error if a property does not exist, and we use a strict mode
                 if ($strict && !property_exists($object, $key)) {

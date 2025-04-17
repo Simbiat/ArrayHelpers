@@ -14,10 +14,10 @@ use function is_string;
 class Editors
 {
     /**
-     * Function allows turning regular arrays (keyed 0, 1, 2, ... n) to associative one using values from the column provided as 2nd argument. Has option to remove that column from new arrays. Useful for structuring results from some complex SELECT, when you know that each row returned is a separate entity.
+     * Function allows turning regular arrays (keyed 0, 1, 2, ... n) to associative one using values from the column provided as the 2nd argument. Can remove that column from new arrays. Useful for structuring results from some complex SELECT, when you know that each row returned is a separate entity.
      * @param array  $oldArray Array to process
      * @param string $newKey   Key to use values from
-     * @param bool   $keyUnset Whether to remove original key
+     * @param bool   $keyUnset Whether to remove the original key
      *
      * @return array
      */
@@ -26,13 +26,13 @@ class Editors
         if (empty($newKey)) {
             throw new \InvalidArgumentException('Empty key provided to DigitToKey function.');
         }
-        #Setting the empty array as precaution
+        #Setting the empty array as a precaution
         $newArray = [];
         #Iterrating the array provided
         foreach ($oldArray as $item) {
-            #Adding the element to new array
+            #Adding the element to the new array
             $newArray[$item[$newKey]] = $item;
-            #Removing old column
+            #Removing the old column
             if ($keyUnset === true) {
                 unset($newArray[$item[$newKey]][$newKey]);
             }
@@ -41,7 +41,7 @@ class Editors
     }
     
     /**
-     * Function converts set of selected columns' values to chosen type (INT by default). Initially created due to MySQL enforcing string values instead of integers in a lot of cases.
+     * Function converts a set of selected columns' values to the chosen type (INT by default). Initially created due to MySQL enforcing string values instead of integers in a lot of cases.
      * @param array        $array   Array to process
      * @param array|string $columns Column(s) to convert
      * @param string       $type    Type to convert to
@@ -80,7 +80,7 @@ class Editors
     }
     
     /**
-     * Simple function, that removes all elements with certain value and optionally re-keys it (useful for indexed array, useless for associative ones)
+     * Simple function that removes all elements with a certain value and optionally re-keys it (useful for an indexed array, useless for associative ones)
      * @param array $array    Array to process
      * @param mixed $remValue Value to remove based on
      * @param bool  $reKey    Whether to re-key the array
@@ -113,17 +113,17 @@ class Editors
      */
     public static function moveToSubarray(array &$array, string|int $key, array $newKeyPath): void
     {
-        #Modify only if key exists
+        #Modify only if the key exists
         if (array_key_exists($key, $array)) {
             #Copy the value
             self::setKeyPath($array, $newKeyPath, $array[$key]);
-            #Remove original key
+            #Remove the original key
             unset($array[$key]);
         }
     }
     
     /**
-     * Allows to recursively set a key path. Based on https://stackoverflow.com/a/5821027/2992851
+     * Allows recursively setting a key path. Based on https://stackoverflow.com/a/5821027/2992851
      * @param array $array Array to process
      * @param array $path  Array where each key is part of a new path (['new', 'path'] is meant to be converted and result in $array['new']['path'])
      * @param mixed $value Value to assign to the new key
