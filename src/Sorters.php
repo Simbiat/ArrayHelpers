@@ -9,17 +9,17 @@ namespace Simbiat\Arrays;
 class Sorters
 {
     /**
-     * Function to sort a multidimensional array by values in a column. Can be `reversed` to sort from larger to smaller (DESC order)
+     * Function to sort a multidimensional array by values in a column. Can be "reversed" to sort from larger to smaller (DESC order)
      * @param array  $array  Array to process
      * @param string $column Column to sort by
      * @param bool   $desc   Whether to use descending or ascending order
      *
      * @return array
      */
-    public static function MultiArrSort(array $array, string $column, bool $desc = false): array
+    public static function multiArrSort(array $array, string $column, bool $desc = false): array
     {
         if (empty($column)) {
-            throw new \InvalidArgumentException('Empty key (column) provided to MultiArrSort function.');
+            return [];
         }
         if ($desc) {
             #Order in DESC

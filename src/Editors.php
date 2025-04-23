@@ -21,34 +21,31 @@ class Editors
      *
      * @return array
      */
-    public static function DigitToKey(array $oldArray, string $newKey, bool $keyUnset = false): array
+    public static function digitToKey(array $oldArray, string $newKey, bool $keyUnset = false): array
     {
         if (empty($newKey)) {
             throw new \InvalidArgumentException('Empty key provided to DigitToKey function.');
         }
         #Setting the empty array as a precaution
-        $newArray = [];
-        #Iterrating the array provided
-        foreach ($oldArray as $item) {
-            #Adding the element to the new array
-            $newArray[$item[$newKey]] = $item;
-            #Removing the old column
-            if ($keyUnset === true) {
-                unset($newArray[$item[$newKey]][$newKey]);
+        $newArray = array_column($oldArray, null, $newKey);
+        #Removing the old column
+        if ($keyUnset) {
+            foreach ($newArray as $key => $item) {
+                unset($newArray[$key][$newKey]);
             }
         }
         return $newArray;
     }
     
     /**
-     * Function converts a set of selected columns' values to the chosen type (INT by default). Initially created due to MySQL enforcing string values instead of integers in a lot of cases.
+     * Function casts a set of selected columns' values to the chosen type (INT by default). Initially created due to MySQL enforcing string values instead of integers in a lot of cases.
      * @param array        $array   Array to process
-     * @param array|string $columns Column(s) to convert
-     * @param string       $type    Type to convert to
+     * @param array|string $columns Column(s) to cast
+     * @param string       $type    Type to cast to
      *
      * @return array
      */
-    public static function ColumnsConversion(array $array, array|string $columns, #[ExpectedValues(['int', 'integer', 'bool', 'boolean', 'float', 'double', 'real', 'string', 'array', 'object'])] string $type = 'int'): array
+    public static function columnsConversion(array $array, array|string $columns, #[ExpectedValues(['int', 'integer', 'bool', 'boolean', 'float', 'double', 'real', 'string', 'array', 'object'])] string $type = 'int'): array
     {
         #Checking values
         if (empty($columns)) {
@@ -64,7 +61,7 @@ class Editors
         foreach ($array as $key => $value) {
             #Iterrating columns' list provided
             foreach ($columns as $column) {
-                #Converting element based on the type
+                #Casting element based on the type
                 $array[$key][$column] = match ($type) {
                     'int', 'integer' => (int)$value[$column],
                     'bool', 'boolean' => (bool)$value[$column],
@@ -72,7 +69,7 @@ class Editors
                     'string' => (string)$value[$column],
                     'array' => (array)$value[$column],
                     'object' => (object)$value[$column],
-                    default => NULL,
+                    default => null,
                 };
             }
         }
@@ -87,7 +84,7 @@ class Editors
      *
      * @return array
      */
-    public static function RemoveByValue(array $array, mixed $remValue, bool $reKey = false): array
+    public static function removeByValue(array $array, mixed $remValue, bool $reKey = false): array
     {
         #Iterrating the array provided
         foreach ($array as $key => $value) {
@@ -124,7 +121,7 @@ class Editors
     
     /**
      * Allows recursively setting a key path. Based on https://stackoverflow.com/a/5821027/2992851
-     * @param array $array Array to process
+     * @param array $array Array to process (passed by reference)
      * @param array $path  Array where each key is part of a new path (['new', 'path'] is meant to be converted and result in $array['new']['path'])
      * @param mixed $value Value to assign to the new key
      *
@@ -144,7 +141,7 @@ class Editors
     }
     
     /**
-     * Rename column in array
+     * Rename a column in a multidimensional array
      * @param array  $array   Array to process
      * @param string $column  Column name
      * @param string $keyName New kew name

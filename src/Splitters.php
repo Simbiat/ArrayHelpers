@@ -12,18 +12,18 @@ class Splitters
 {
     /**
      * Function that splits the array to 2 representing first X and last X rows from it, providing a way to get 'Top X' and its counterpart
-     * @param array $array Array to process
-     * @param int   $rows  Number of rows to select (from top and bottom separately)
+     * @param array $array Array to process.
+     * @param int   $rows  Number of rows to select (from top and bottom separately). Send `0` or negative number to split evenly.
      *
      * @return array
      */
     public static function topAndBottom(array $array, int $rows = 0): array
     {
         if (empty($array)) {
-            throw new \InvalidArgumentException('Empty array provided to topAndBottom function.');
+            return ['top' => [], 'bottom' => []];
         }
         if (count($array) === 1) {
-            throw new \UnexpectedValueException('Array provided to topAndBottom function contains only 1 element.');
+            throw new \UnexpectedValueException('Array provided to `topAndBottom` function contains only 1 element.');
         }
         #If the number of rows sent is <=0 or the number of elements is lower than the number of rows x2, attempt to split evenly
         if ($rows <= 0 || count($array) < ($rows * 2)) {
@@ -35,7 +35,7 @@ class Splitters
     }
     
     /**
-     * Useful to reduce the number of travels to a database. Instead of doing 2+ queries separately, we do just 1 query and then split it to several arrays in code.
+     * Useful to reduce the number of travels to a database. Instead of doing 2+ queries separately, we do just 1 query and then split the results to several arrays in code.
      * If required, you can send a list of keys that you expect, which can work as a filter.
      *
      * @param array  $array           Array to process.
@@ -52,7 +52,7 @@ class Splitters
         $newArray = [];
         #Checking values
         if (empty($array)) {
-            throw new \InvalidArgumentException('Empty array provided to splitByKey function.');
+            return [];
         }
         if (empty($columnKey)) {
             throw new \InvalidArgumentException('Empty key provided to splitByKey function.');

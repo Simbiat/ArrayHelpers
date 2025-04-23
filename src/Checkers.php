@@ -62,6 +62,6 @@ class Checkers
     public static function isAllScalar(array $array): bool
     {
         #Check that all values are scalars
-        return (count(array_filter(array_values($array), '\is_scalar')) === count($array));
+        return !array_any($array, static fn($value) => !\is_scalar($value));
     }
 }

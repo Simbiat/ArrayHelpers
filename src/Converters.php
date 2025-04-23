@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace Simbiat\Arrays;
 
+use Dom\Node;
 use function count;
 use function is_string;
 
@@ -18,19 +19,12 @@ class Converters
      *
      * @return array
      */
-    public static function MultiToSingle(array $oldArray, string $keyToSave): array
+    public static function multiToSingle(array $oldArray, string $keyToSave): array
     {
         if (empty($keyToSave)) {
-            throw new \InvalidArgumentException('Empty key provided to MultiToSingle function.');
+            return [];
         }
-        #Setting the empty array as a precaution
-        $newArray = [];
-        #Iterrating the array provided
-        foreach ($oldArray as $oldKey => $item) {
-            #Adding the element to the new array
-            $newArray[$oldKey] = $item[$keyToSave];
-        }
-        return $newArray;
+        return array_combine(array_keys($oldArray), array_column($oldArray, $keyToSave));
     }
     
     #Supressing inspection for functions related to DBase, since we have our own handler logic for this
@@ -43,11 +37,11 @@ class Converters
      */
     public static function dbfToArray(string $file): array
     {
-        if (!file_exists($file)) {
-            throw new \UnexpectedValueException('File \''.$file.'\' provided to dbfToArray function is not found.');
-        }
         if (!\extension_loaded('dbase')) {
             throw new \RuntimeException('dbase extension required for dbfToArray function is not loaded.');
+        }
+        if (!file_exists($file)) {
+            throw new \UnexpectedValueException('File \''.$file.'\' provided to dbfToArray function is not found.');
         }
         #Setting the empty array as a precaution
         $array = [];
@@ -73,21 +67,22 @@ class Converters
     }
     
     /**
-     * Function to convert DOMNode into an array with a set of attributes, present in the node
-     * @param \DOMNode $node            Node to process
-     * @param bool     $null            Whether to replace empty strings with NULL
-     * @param array    $extraAttributes List of attributes to add as either `null` (if `$null` is `true`) or empty string, if the attribute is missing
+     * Function to convert DOMNode into an array with a set of attributes, present in the node, as the array's keys.
+     *
+     * @param \DOMNode|\Dom\Node $node            Node to process
+     * @param bool               $null            Whether to replace empty strings with `null`
+     * @param array              $extraAttributes List of attributes to add as either `null` (if `$null` is `true`) or empty string, if the attribute is missing
      *
      * @return array
      */
-    public static function attributesToArray(\DOMNode $node, bool $null = true, array $extraAttributes = []): array
+    public static function attributesToArray(\DOMNode|Node $node, bool $null = true, array $extraAttributes = []): array
     {
         $result = [];
         #Iterrate attributes of the node
         foreach ($node->attributes as $attrName => $attrValue) {
             if ($null && $attrValue === '') {
-                #Add to the resulting array as NULL if it's an empty string
-                $result[$attrName] = NULL;
+                #Add to the resulting array as null if it's an empty string
+                $result[$attrName] = null;
             } else {
                 #Add actual value
                 $result[$attrName] = $attrValue->textContent;
@@ -98,8 +93,8 @@ class Converters
             foreach ($extraAttributes as $attribute) {
                 if (!isset($result[$attribute])) {
                     if ($null) {
-                        #Add as NULL
-                        $result[$attribute] = NULL;
+                        #Add as null
+                        $result[$attribute] = null;
                     } else {
                         #Or add as empty string
                         $result[$attribute] = '';
@@ -112,9 +107,9 @@ class Converters
     }
     
     /**
-     * Convert a regular array into a multidimensional one by turning keys into one of the columns
-     * @param array $array Array to process
-     * @param array $keys  New keys' names
+     * Convert a regular array into a multidimensional one by turning provided keys into one of the columns
+     * @param array $array Array to process.
+     * @param array $keys  New keys' names. Has to be an array of 2 string or integer elements.
      *
      * @return array
      */
@@ -133,10 +128,10 @@ class Converters
     /**
      * Convert an array to object properties
      *
-     * @param object $object Object to update
-     * @param array  $array  Array of properties
-     * @param array  $skip   Properties to skip
-     * @param bool   $strict Whether property needs to exist
+     * @param object $object Object to update.
+     * @param array  $array  Array of properties. Only values with string keys will be processed.
+     * @param array  $skip   Properties to skip.
+     * @param bool   $strict Whether property needs to exist.
      *
      * @return void
      */
