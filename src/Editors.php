@@ -15,26 +15,26 @@ class Editors
 {
     /**
      * Function allows turning regular arrays (keyed 0, 1, 2, ... n) to associative one using values from the column provided as the 2nd argument. Can remove that column from new arrays. Useful for structuring results from some complex SELECT, when you know that each row returned is a separate entity.
-     * @param array  $oldArray Array to process
-     * @param string $newKey   Key to use values from
-     * @param bool   $keyUnset Whether to remove the original key
+     * @param array  $old_array Array to process
+     * @param string $new_key   Key to use values from
+     * @param bool   $key_unset Whether to remove the original key
      *
      * @return array
      */
-    public static function digitToKey(array $oldArray, string $newKey, bool $keyUnset = false): array
+    public static function digitToKey(array $old_array, string $new_key, bool $key_unset = false): array
     {
-        if (empty($newKey)) {
+        if (empty($new_key)) {
             throw new \InvalidArgumentException('Empty key provided to DigitToKey function.');
         }
         #Setting the empty array as a precaution
-        $newArray = array_column($oldArray, null, $newKey);
+        $new_array = array_column($old_array, null, $new_key);
         #Removing the old column
-        if ($keyUnset) {
-            foreach ($newArray as $key => $item) {
-                unset($newArray[$key][$newKey]);
+        if ($key_unset) {
+            foreach ($new_array as $key => $item) {
+                unset($new_array[$key][$new_key]);
             }
         }
-        return $newArray;
+        return $new_array;
     }
     
     /**
@@ -78,23 +78,24 @@ class Editors
     
     /**
      * Simple function that removes all elements with a certain value and optionally re-keys it (useful for an indexed array, useless for associative ones)
-     * @param array $array    Array to process
-     * @param mixed $remValue Value to remove based on
-     * @param bool  $reKey    Whether to re-key the array
+     *
+     * @param array $array        Array to process
+     * @param mixed $remove_value Value to remove based on
+     * @param bool  $rekey        Whether to rekey the array
      *
      * @return array
      */
-    public static function removeByValue(array $array, mixed $remValue, bool $reKey = false): array
+    public static function removeByValue(array $array, mixed $remove_value, bool $rekey = false): array
     {
         #Iterrating the array provided
         foreach ($array as $key => $value) {
             #Compare either strictly or not, depending on the flag provided
-            if ($value === $remValue) {
+            if ($value === $remove_value) {
                 unset($array[$key]);
             }
         }
         #Rekey the array
-        if ($reKey) {
+        if ($rekey) {
             $array = array_values($array);
         }
         return $array;
@@ -102,18 +103,19 @@ class Editors
     
     /**
      * Function to move keys into a subarray. For example, you have a key like $array['key'], but you want to remove it and have it as $array['subarray']['key'] - then use this function. Purely for data formatting.
-     * @param array      $array      Array to process
-     * @param string|int $key        Key to move
-     * @param array      $newKeyPath Array where each key is part of a new path ($array['new', 'path'] is meant to be converted to result in $array['new']['path'])
+     *
+     * @param array      $array        Array to process
+     * @param string|int $key          Key to move
+     * @param array      $new_key_path Array where each key is part of a new path ($array['new', 'path'] is meant to be converted to result in $array['new']['path'])
      *
      * @return void
      */
-    public static function moveToSubarray(array &$array, string|int $key, array $newKeyPath): void
+    public static function moveToSubarray(array &$array, string|int $key, array $new_key_path): void
     {
         #Modify only if the key exists
         if (array_key_exists($key, $array)) {
             #Copy the value
-            self::setKeyPath($array, $newKeyPath, $array[$key]);
+            self::setKeyPath($array, $new_key_path, $array[$key]);
             #Remove the original key
             unset($array[$key]);
         }
@@ -142,16 +144,17 @@ class Editors
     
     /**
      * Rename a column in a multidimensional array
-     * @param array  $array   Array to process
-     * @param string $column  Column name
-     * @param string $keyName New kew name
+     *
+     * @param array  $array    Array to process
+     * @param string $column   Column name
+     * @param string $key_name New kew name
      *
      * @return void
      */
-    public static function renameColumn(array &$array, string $column, string $keyName): void
+    public static function renameColumn(array &$array, string $column, string $key_name): void
     {
         foreach ($array as $key => $row) {
-            $array[$key][$keyName] = $row[$column];
+            $array[$key][$key_name] = $row[$column];
             unset($array[$key][$column]);
         }
     }

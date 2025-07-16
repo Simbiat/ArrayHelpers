@@ -9,10 +9,10 @@ Functions to check if something is true or not.
 ### isMultiDimensional
 
 ```php
-\Simbiat\Arrays\Checkers::isMultiDimensional(array $array, bool $equalLength = false, bool $allScalar = false);
+\Simbiat\Arrays\Checkers::isMultiDimensional(array $array, bool $equal_length = false, bool $all_scalar = false);
 ```
 
-Checks if an array is multidimensional, essentially if all of its values are arrays. If `$equalLength` is `true`, will also check that all the arrays are of the same length and will throw an error if it's not the case. If `$allScalar` is `true`, and the array is *not* multidimensional, the function will also check if all values in the array are scalar, and throw an error if at least one of them is not.
+Checks if an array is multidimensional, essentially if all of its values are arrays. If `$equal_length` is `true`, will also check that all the arrays are of the same length and will throw an error if it's not the case. If `$all_scalar` is `true`, and the array is *not* multidimensional, the function will also check if all values in the array are scalar, and throw an error if at least one of them is not.
 
 ### isAssociative
 
@@ -37,7 +37,7 @@ Functions to convert something to something else.
 ### multiToSingle
 
 ```php
-\Simbiat\Arrays\Converters::multiToSingle(array $oldArray, string $keyToSave);
+\Simbiat\Arrays\Converters::multiToSingle(array $old_array, string $key_to_save);
 ```
 
 Converts a multidimensional array to "flat" (or "flatter") one. Essentially a `array_column`, but also uses `array_combine` and `array_keys` to preserve the keys.
@@ -53,10 +53,10 @@ Converts contents of a [DBF](https://en.wikipedia.org/wiki/.dbf) file to an arra
 ### attributesToArray
 
 ```php
-\Simbiat\Arrays\Converters::attributesToArray(\DOMNode|Node $node, bool $null = true, array $extraAttributes = []);
+\Simbiat\Arrays\Converters::attributesToArray(\DOMNode|Node $node, bool $null = true, array $extra_attributes = []);
 ```
 
-Converts `\DOMNode` or `\Dom\Node` into an array with a set of attributes, present in the node, as the array's keys. If `$null` is set to `true` empty attributes will be replaced with `null` (instead of empty string). You can also pass a list of attributes in `$extraAttributes`, which will be added to all resulting elements, if they do not have that attribute. Extra attributes are added as either an empty string or a `null` if `$null` is `true`.
+Converts `\DOMNode` or `\Dom\Node` into an array with a set of attributes, present in the node, as the array's keys. If `$null` is set to `true` empty attributes will be replaced with `null` (instead of empty string). You can also pass a list of attributes in `$extra_attributes`, which will be added to all resulting elements, if they do not have that attribute. Extra attributes are added as either an empty string or a `null` if `$null` is `true`.
 
 ### toMultiArray
 
@@ -114,10 +114,10 @@ Functions that somehow edit the array content.
 ### digitToKey
 
 ```php
-\Simbiat\Arrays\Editors::digitToKey(array $oldArray, string $newKey, bool $keyUnset = false);
+\Simbiat\Arrays\Editors::digitToKey(array $old_array, string $new_key, bool $key_unset = false);
 ```
 
-Replaces a multidimensional array's values with values from a specific column. With PHP updates this has become a wrapper for `array_column`, but `$keyUnset` set to `true` allows you to remove the chose column after rekeying.
+Replaces a multidimensional array's values with values from a specific column. With PHP updates this has become a wrapper for `array_column`, but `$key_unset` set to `true` allows you to remove the chose column after rekeying.
 
 ### ColumnsConversion
 
@@ -130,10 +130,10 @@ Allows casting values in a column (or set of columns) to a specific type. Suppor
 ### RemoveByValue
 
 ```php
-\Simbiat\Arrays\Editors::removeByValue(array $array, mixed $remValue, bool $reKey = false);
+\Simbiat\Arrays\Editors::removeByValue(array $array, mixed $remove_value, bool $rekey = false);
 ```
 
-Simple function that removes all elements with a certain value (`$remValue`) and optionally re-keys it if `$reKey` is `true (useful for an indexed array, useless for associative ones).
+Simple function that removes all elements with a certain value (`$remove_value`) and optionally re-keys it if `$rekey` is `true (useful for an indexed array, useless for associative ones).
 
 ### setKeyPath
 
@@ -160,16 +160,16 @@ Parts of the path are created only if they are not present already.
 ### moveToSubarray
 
 ```php
-\Simbiat\Arrays\Editors::moveToSubarray(array $array, string|int $key, array $newKeyPath);
+\Simbiat\Arrays\Editors::moveToSubarray(array $array, string|int $key, array $new_key_path);
 ```
 
 Function to move keys into a subarray. For example, you have a key like `$array['key']`, but you want to remove it and have it as `$array['subarray']['key']` - then use this function. Purely for data formatting.  
-`$newKeyPath` requires the same format as `$path` in `setKeyPath()`. `$array` is passed by reference.
+`$new_key_path` requires the same format as `$path` in `setKeyPath()`. `$array` is passed by reference.
 
 ### renameColumn
 
 ```php
-\Simbiat\Arrays\Editors::renameColumn(array $array, string $column, string $keyName);
+\Simbiat\Arrays\Editors::renameColumn(array $array, string $column, string $key_name);
 ```
 
 Rename a column in a multidimensional array. `$array` is passed by reference.
@@ -201,7 +201,7 @@ Function that splits the array to 2 representing first X and last X rows from it
 ### splitByKey
 
 ```php
-\Simbiat\Arrays\Splitters::splitByKey(array $array, string $columnKey, array $newKeys = [], bool $keepKey = false, bool $caseInsensitive = false);
+\Simbiat\Arrays\Splitters::splitByKey(array $array, string $column_key, array $new_keys = [], bool $keep_key = false, bool $case_insensitive = false);
 ```
 
 Splits a multidimensional array by values from a column. Useful to reduce the number of travels to a database. Instead of doing 2+ queries separately, we do just one query and then split the results to several arrays in code. Turns an array like this:
@@ -242,5 +242,5 @@ to this:
 ]
 ```
 
-If `$keepKey` is set to `true` will retain the original column in all the rows. If `$caseInsensitive` is `true` will do `mb_strtolower()` on all the keys from the column to ensure correct splitting (that's the case where you *may* want to retain the original value of the key, too).  
-If `$newKeys` is empty (default), then `array_column` will be used to get the keys for the resulting array. However, if a list of integers or strings (or mix, which is not recommended) is provided, it will act as a filter, discarding rows, which have the column's value, that's not in the list.
+If `$keep_key` is set to `true` will retain the original column in all the rows. If `$case_insensitive` is `true` will do `mb_strtolower()` on all the keys from the column to ensure correct splitting (that's the case where you *may* want to retain the original value of the key, too).  
+If `$new_keys` is empty (default), then `array_column` will be used to get the keys for the resulting array. However, if a list of integers or strings (or mix, which is not recommended) is provided, it will act as a filter, discarding rows, which have the column's value, that's not in the list.

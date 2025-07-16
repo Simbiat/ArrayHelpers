@@ -14,17 +14,18 @@ class Converters
 {
     /**
      * Function allows turning multidimensional arrays to regular ones by "overwriting" each "row" with value from chosen column.
-     * @param array  $oldArray  Array to process
-     * @param string $keyToSave Column name to use
+     *
+     * @param array  $old_array   Array to process
+     * @param string $key_to_save Column name to use
      *
      * @return array
      */
-    public static function multiToSingle(array $oldArray, string $keyToSave): array
+    public static function multiToSingle(array $old_array, string $key_to_save): array
     {
-        if (empty($keyToSave)) {
+        if (empty($key_to_save)) {
             return [];
         }
-        return array_combine(array_keys($oldArray), array_column($oldArray, $keyToSave));
+        return array_combine(array_keys($old_array), array_column($old_array, $key_to_save));
     }
     
     #Supressing inspection for functions related to DBase, since we have our own handler logic for this
@@ -37,7 +38,7 @@ class Converters
      */
     public static function dbfToArray(string $file): array
     {
-        if (!\extension_loaded('dbase')) {
+        if (!extension_loaded('dbase')) {
             throw new \RuntimeException('dbase extension required for dbfToArray function is not loaded.');
         }
         if (!file_exists($file)) {
@@ -69,28 +70,28 @@ class Converters
     /**
      * Function to convert DOMNode into an array with a set of attributes, present in the node, as the array's keys.
      *
-     * @param \DOMNode|\Dom\Node $node            Node to process
-     * @param bool               $null            Whether to replace empty strings with `null`
-     * @param array              $extraAttributes List of attributes to add as either `null` (if `$null` is `true`) or empty string, if the attribute is missing
+     * @param \DOMNode|\Dom\Node $node             Node to process
+     * @param bool               $null             Whether to replace empty strings with `null`
+     * @param array              $extra_attributes List of attributes to add as either `null` (if `$null` is `true`) or empty string, if the attribute is missing
      *
      * @return array
      */
-    public static function attributesToArray(\DOMNode|Node $node, bool $null = true, array $extraAttributes = []): array
+    public static function attributesToArray(\DOMNode|Node $node, bool $null = true, array $extra_attributes = []): array
     {
         $result = [];
         #Iterrate attributes of the node
-        foreach ($node->attributes as $attrName => $attrValue) {
-            if ($null && $attrValue === '') {
+        foreach ($node->attributes as $attribute_name => $attribute_value) {
+            if ($null && $attribute_value === '') {
                 #Add to the resulting array as null if it's an empty string
-                $result[$attrName] = null;
+                $result[$attribute_name] = null;
             } else {
                 #Add actual value
-                $result[$attrName] = $attrValue->textContent;
+                $result[$attribute_name] = $attribute_value->textContent;
             }
         }
         #Add any additional attributes that are expected
-        if (!empty($extraAttributes)) {
-            foreach ($extraAttributes as $attribute) {
+        if (!empty($extra_attributes)) {
+            foreach ($extra_attributes as $attribute) {
                 if (!isset($result[$attribute])) {
                     if ($null) {
                         #Add as null
@@ -109,7 +110,7 @@ class Converters
     /**
      * Convert a regular array into a multidimensional one by turning provided keys into one of the columns
      * @param array $array Array to process.
-     * @param array $keys  New keys' names. Has to be an array of 2 string or integer elements.
+     * @param array $keys  New keys' names. Has to be an array of 2 strings or integer elements.
      *
      * @return array
      */
@@ -118,11 +119,11 @@ class Converters
         if (count($keys) !== 2) {
             throw new \UnexpectedValueException('Number of keys provided does not equal 2');
         }
-        $newArray = [];
+        $new_array = [];
         foreach ($array as $key => $element) {
-            $newArray[] = [$keys[0] => $key, $keys[1] => $element];
+            $new_array[] = [$keys[0] => $key, $keys[1] => $element];
         }
-        return $newArray;
+        return $new_array;
     }
     
     /**
@@ -140,10 +141,10 @@ class Converters
         #Iterrate the array
         foreach ($array as $key => $value) {
             #Check that a key is string and not in the list of keys to skip
-            if (is_string($key) && !\in_array($key, $skip, true)) {
+            if (is_string($key) && !in_array($key, $skip, true)) {
                 #Throw an error if a property does not exist, and we use a strict mode
                 if ($strict && !property_exists($object, $key)) {
-                    throw new \LogicException(\get_class($object).' must have declared `'.$key.'` property.');
+                    throw new \LogicException(get_class($object).' must have declared `'.$key.'` property.');
                 }
                 #Set property (or, at least, attempt to)
                 $object->{$key} = $value;
