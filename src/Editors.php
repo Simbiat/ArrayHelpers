@@ -27,7 +27,7 @@ class Editors
             throw new \InvalidArgumentException('Empty key provided to DigitToKey function.');
         }
         #Setting the empty array as a precaution
-        $new_array = array_column($old_array, null, $new_key);
+        $new_array = \array_column($old_array, null, $new_key);
         #Removing the old column
         if ($key_unset) {
             foreach ($new_array as $key => $item) {
@@ -96,7 +96,7 @@ class Editors
         }
         #Rekey the array
         if ($rekey) {
-            $array = array_values($array);
+            $array = \array_values($array);
         }
         return $array;
     }
@@ -131,7 +131,7 @@ class Editors
      */
     public static function setKeyPath(array &$array, array $path, mixed $value): void
     {
-        $key = array_shift($path);
+        $key = \array_shift($path);
         if (empty($path)) {
             $array[$key] = $value;
         } else {

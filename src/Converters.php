@@ -25,7 +25,7 @@ class Converters
         if (empty($key_to_save)) {
             return [];
         }
-        return array_combine(array_keys($old_array), array_column($old_array, $key_to_save));
+        return \array_combine(\array_keys($old_array), \array_column($old_array, $key_to_save));
     }
     
     #Supressing inspection for functions related to DBase, since we have our own handler logic for this
@@ -38,10 +38,10 @@ class Converters
      */
     public static function dbfToArray(string $file): array
     {
-        if (!extension_loaded('dbase')) {
+        if (!\extension_loaded('dbase')) {
             throw new \RuntimeException('dbase extension required for dbfToArray function is not loaded.');
         }
-        if (!file_exists($file)) {
+        if (!\file_exists($file)) {
             throw new \UnexpectedValueException('File \''.$file.'\' provided to dbfToArray function is not found.');
         }
         #Setting the empty array as a precaution
@@ -141,10 +141,10 @@ class Converters
         #Iterrate the array
         foreach ($array as $key => $value) {
             #Check that a key is string and not in the list of keys to skip
-            if (is_string($key) && !in_array($key, $skip, true)) {
+            if (is_string($key) && !\in_array($key, $skip, true)) {
                 #Throw an error if a property does not exist, and we use a strict mode
-                if ($strict && !property_exists($object, $key)) {
-                    throw new \LogicException(get_class($object).' must have declared `'.$key.'` property.');
+                if ($strict && !\property_exists($object, $key)) {
+                    throw new \LogicException(\get_class($object).' must have declared `'.$key.'` property.');
                 }
                 #Set property (or, at least, attempt to)
                 $object->{$key} = $value;

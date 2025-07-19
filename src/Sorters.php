@@ -23,12 +23,12 @@ class Sorters
         }
         if ($desc) {
             #Order in DESC
-            uasort($array, static function ($a, $b) use (&$column) {
+            \uasort($array, static function ($a, $b) use (&$column) {
                 return $b[$column] <=> $a[$column];
             });
         } else {
             #Order in ASC
-            uasort($array, static function ($a, $b) use (&$column) {
+            \uasort($array, static function ($a, $b) use (&$column) {
                 return $a[$column] <=> $b[$column];
             });
         }

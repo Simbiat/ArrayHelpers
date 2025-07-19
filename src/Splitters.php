@@ -27,10 +27,10 @@ class Splitters
         }
         #If the number of rows sent is <=0 or the number of elements is lower than the number of rows x2, attempt to split evenly
         if ($rows <= 0 || count($array) < ($rows * 2)) {
-            $rows = (int)floor(count($array) / 2);
+            $rows = (int)\floor(count($array) / 2);
         }
         $new_array['top'] = array_slice($array, 0, $rows);
-        $new_array['bottom'] = array_reverse(array_slice($array, -$rows, $rows));
+        $new_array['bottom'] = \array_reverse(array_slice($array, -$rows, $rows));
         return $new_array;
     }
     
@@ -58,24 +58,24 @@ class Splitters
             throw new \InvalidArgumentException('Empty key provided to splitByKey function.');
         }
         if (empty($new_keys)) {
-            $new_keys = array_unique(array_column($array, $column_key));
-            asort($new_keys, SORT_NATURAL);
+            $new_keys = \array_unique(\array_column($array, $column_key));
+            \asort($new_keys, \SORT_NATURAL);
         }
         #If we use case-insensitive comparison, we need to ensure standardized keys and lack of duplicates
         if ($case_insensitive) {
             foreach ($new_keys as $key => $value) {
-                if (!is_numeric($value)) {
+                if (!\is_numeric($value)) {
                     $new_keys[$key] = mb_strtolower($value, 'UTF-8');
                 }
             }
-            $new_keys = array_unique($new_keys, SORT_NATURAL);
+            $new_keys = \array_unique($new_keys, \SORT_NATURAL);
         }
         #Prepare an empty array
         foreach ($new_keys as $arr_key => $new_key) {
             if (empty($new_key)) {
                 throw new \UnexpectedValueException('New key with index value \''.$arr_key.'\' is empty and cannot be used as key for new array by splitByKey function.');
             }
-            if (is_int($new_key)) {
+            if (\is_int($new_key)) {
                 $new_array[(string)$new_key] = [];
             } elseif (is_string($new_key)) {
                 if ($case_insensitive) {
