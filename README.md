@@ -113,7 +113,15 @@ If `$skip` array is passed to the function and a key from `$array` is present th
 \Simbiat\Arrays\Converters::enumValues(string $enum);
 ```
 
-Gets either list of values from a backed enum or names from a non-backed enum. `$enum` is expected to be something like `\Path\To\Enum::class`.
+Gets either list of cases' values from a backed enum. `$enum` is expected to be something like `\Path\To\Enum::class`.
+
+### enumNames
+
+```php
+\Simbiat\Arrays\Converters::enumNames(string $enum);
+```
+
+Gets either list of cases' names an enum. `$enum` is expected to be something like `\Path\To\Enum::class`.
 
 ## Editors
 

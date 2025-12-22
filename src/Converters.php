@@ -153,7 +153,7 @@ class Converters
     }
     
     /**
-     * Get values of a backed enum's or names of non-backed enum's cases
+     * Get values of a backed enum's cases
      * @param string $enum Enum to get values from
      *
      * @return array
@@ -165,9 +165,20 @@ class Converters
                 static fn(\BackedEnum $case) => $case->value, $enum::cases()
             );
         }
-        if (\is_subclass_of($enum, \UnitEnum::class)) {
+        throw new \InvalidArgumentException($enum.' is not a backed enum');
+    }
+    
+    /**
+     * Get names of an enum's cases
+     * @param string $enum Enum to get values from
+     *
+     * @return array
+     */
+    public static function enumNames(string $enum): array
+    {
+        if (\is_subclass_of($enum, \UnitEnum::class) || \is_subclass_of($enum, \BackedEnum::class)) {
             return \array_map(
-                static fn(\UnitEnum $case) => $case->name, $enum::cases()
+                static fn(\UnitEnum|\BackedEnum $case) => $case->name, $enum::cases()
             );
         }
         throw new \InvalidArgumentException($enum.' is not an enum');
