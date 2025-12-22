@@ -22,7 +22,7 @@ class Converters
      */
     public static function multiToSingle(array $old_array, string $key_to_save): array
     {
-        if (empty($key_to_save)) {
+        if (\preg_match('/^\s*$/', $key_to_save)) {
             return [];
         }
         return \array_combine(\array_keys($old_array), \array_column($old_array, $key_to_save));
@@ -41,7 +41,7 @@ class Converters
         if (!\extension_loaded('dbase')) {
             throw new \RuntimeException('dbase extension required for dbfToArray function is not loaded.');
         }
-        if (!\file_exists($file)) {
+        if (!\is_file($file)) {
             throw new \UnexpectedValueException('File \''.$file.'\' provided to dbfToArray function is not found.');
         }
         #Setting the empty array as a precaution
@@ -55,9 +55,9 @@ class Converters
                 throw new \RuntimeException('Failed to get number of records in \''.$file.'\' provided to dbfToArray function.');
             }
             #Iterrate the records
-            for ($i = 1; $i <= $record_numbers; $i++) {
+            for ($iter = 1; $iter <= $record_numbers; $iter++) {
                 #Add record to array
-                $array[] = dbase_get_record_with_names($dbf, $i);
+                $array[] = dbase_get_record_with_names($dbf, $iter);
             }
             #Close file
             dbase_close($dbf);
@@ -90,9 +90,9 @@ class Converters
             }
         }
         #Add any additional attributes that are expected
-        if (!empty($extra_attributes)) {
+        if (count($extra_attributes) > 0) {
             foreach ($extra_attributes as $attribute) {
-                if (!isset($result[$attribute])) {
+                if (!\array_key_exists($attribute, $result)) {
                     if ($null) {
                         #Add as null
                         $result[$attribute] = null;
@@ -150,5 +150,26 @@ class Converters
                 $object->{$key} = $value;
             }
         }
+    }
+    
+    /**
+     * Get values of a backed enum's or names of non-backed enum's cases
+     * @param string $enum Enum to get values from
+     *
+     * @return array
+     */
+    public static function enumValues(string $enum): array
+    {
+        if (\is_subclass_of($enum, \BackedEnum::class)) {
+            return \array_map(
+                static fn(\BackedEnum $case) => $case->value, $enum::cases()
+            );
+        }
+        if (\is_subclass_of($enum, \UnitEnum::class)) {
+            return \array_map(
+                static fn(\UnitEnum $case) => $case->name, $enum::cases()
+            );
+        }
+        throw new \InvalidArgumentException($enum.' is not an enum');
     }
 }

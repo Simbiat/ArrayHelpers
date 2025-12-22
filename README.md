@@ -107,6 +107,14 @@ if you provide the below array as `$keys`:
 
 If `$skip` array is passed to the function and a key from `$array` is present there, it will be skipped. If `$strict` is set to `true`, and a property does not exist in the object, an exception will be thrown.
 
+### enumValues
+
+```php
+\Simbiat\Arrays\Converters::enumValues(string $enum);
+```
+
+Gets either list of values from a backed enum or names from a non-backed enum. `$enum` is expected to be something like `\Path\To\Enum::class`.
+
 ## Editors
 
 Functions that somehow edit the array content.
