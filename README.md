@@ -202,6 +202,14 @@ Functions to sort arrays (just one for now).
 
 Function to sort a multidimensional array by values in a column. Can be "reversed" to sort from larger to smaller (descending order), if `$desc` is set to `true`.
 
+### recursiveSort
+
+```php
+\Simbiat\Arrays\Sorters::recursiveSort(array &$array, bool $key = false, bool $desc = false, int $sort_flag = \SORT_REGULAR);
+```
+
+Function to recursively sort array using `sort`, `rsort`, `ksort` or `krsort` depending on respective values of `$key` and `$desc` arguments.
+
 ## Splitters
 
 Functions to split arrays into parts.

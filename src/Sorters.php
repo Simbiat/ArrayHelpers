@@ -34,4 +34,34 @@ class Sorters
         }
         return $array;
     }
+    
+    /**
+     * Recursively sort array (using `sort`, `rsort`, `ksort` or `krsort`)
+     * @param array $array     Array to sort
+     * @param bool  $key       Whether to sort by key or by value
+     * @param bool  $desc      Whether to sort in descending order
+     * @param int   $sort_flag Respective PHP's `SORT_*` flag to control logic of sort functions
+     *
+     * @return void
+     */
+    public static function recursiveSort(array &$array, bool $key = false, bool $desc = false, int $sort_flag = \SORT_REGULAR): void
+    {
+        foreach ($array as &$value) {
+            if (\is_array($value)) {
+                self::recursiveSort($value, $key, $desc, $sort_flag);
+            }
+        }
+        unset($value);
+        if ($key) {
+            if ($desc) {
+                \krsort($array, $sort_flag);
+            } else {
+                \ksort($array, $sort_flag);
+            }
+        } elseif ($desc) {
+            \rsort($array, $sort_flag);
+        } else {
+            \sort($array, $sort_flag);
+        }
+    }
 }
