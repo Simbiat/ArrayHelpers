@@ -30,6 +30,29 @@ Checks if an array is associative, that is if there is at least one key that's a
 
 Checks if an array consists only of scalar values or not.
 
+### getChanges
+
+```php
+\Simbiat\Arrays\Checkers::getChanges(array $old, array $new);
+```
+
+Get list of changes in the new array compared to the old one. Result will be an array looking like this:
+
+```php
+[
+    'key1' => [
+        'from' => 'old_value',
+        'to' => 'new_value'
+    ],
+    'key2' => [
+        'from' => 'old_value',
+        'to' => 'new_value'
+    ],
+]
+```
+
+If a key is missing in old or new array `null` will be used for respective `from` or `to` value.
+
 ## Converters
 
 Functions to convert something to something else.

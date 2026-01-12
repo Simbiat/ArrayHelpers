@@ -64,4 +64,31 @@ class Checkers
         #Check that all values are scalars
         return !\array_any($array, static fn($value) => !\is_scalar($value));
     }
+    
+    /**
+     * Get list of changes in the new array compared to the old one
+     * @param array $old
+     * @param array $new
+     *
+     * @return array
+     */
+    public static function getChanges(array $old, array $new): array
+    {
+        $changes = [];
+        foreach ($old as $key => $value) {
+            if (\array_key_exists($key, $new)) {
+                if ($new[$key] !== $value) {
+                    $changes[$key] = ['from' => $value, 'to' => $new[$key]];
+                }
+                #Remove the key to shorten next loop
+                unset($new[$key]);
+            } else {
+                $changes[$key] = ['from' => $value, 'to' => null];
+            }
+        }
+        foreach ($new as $key => $value) {
+            $changes[$key] = ['from' => null, 'to' => $value];
+        }
+        return $changes;
+    }
 }
