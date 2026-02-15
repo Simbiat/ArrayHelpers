@@ -72,7 +72,7 @@ class Splitters
         }
         #Prepare an empty array
         foreach ($new_keys as $arr_key => $new_key) {
-            if (empty($new_key)) {
+            if (\in_array($new_key, [null, false, '', []], true)) {
                 throw new \UnexpectedValueException('New key with index value \''.$arr_key.'\' is empty and cannot be used as key for new array by splitByKey function.');
             }
             if (\is_int($new_key)) {
