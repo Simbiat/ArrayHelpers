@@ -1,7 +1,7 @@
 <?php
 declare(strict_types = 1);
 
-namespace Simbiat\Arrays;
+namespace Simbiat\ArrayHelpers;
 
 /**
  * Functions to sort arrays

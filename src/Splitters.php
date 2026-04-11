@@ -1,7 +1,7 @@
 <?php
 declare(strict_types = 1);
 
-namespace Simbiat\Arrays;
+namespace Simbiat\ArrayHelpers;
 
 use function array_slice, count, is_string;
 

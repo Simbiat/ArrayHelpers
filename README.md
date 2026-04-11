@@ -9,7 +9,7 @@ Functions to check if something is true or not.
 ### isMultiDimensional
 
 ```php
-\Simbiat\Arrays\Checkers::isMultiDimensional(array $array, bool $equal_length = false, bool $all_scalar = false);
+\Simbiat\ArrayHelpers\Checkers::isMultiDimensional(array $array, bool $equal_length = false, bool $all_scalar = false);
 ```
 
 Checks if an array is multidimensional, essentially if all of its values are arrays. If `$equal_length` is `true`, will also check that all the arrays are of the same length and will throw an error if it's not the case. If `$all_scalar` is `true`, and the array is *not* multidimensional, the function will also check if all values in the array are scalar, and throw an error if at least one of them is not.
@@ -17,7 +17,7 @@ Checks if an array is multidimensional, essentially if all of its values are arr
 ### isAssociative
 
 ```php
-\Simbiat\Arrays\Checkers::isAssociative(array $array);
+\Simbiat\ArrayHelpers\Checkers::isAssociative(array $array);
 ```
 
 Checks if an array is associative, that is if there is at least one key that's a string (PHP will convert numeric keys to integers by design and will not allow other data types).
@@ -25,7 +25,7 @@ Checks if an array is associative, that is if there is at least one key that's a
 ### isAllScalar
 
 ```php
-\Simbiat\Arrays\Checkers::isAllScalar(array $array);
+\Simbiat\ArrayHelpers\Checkers::isAllScalar(array $array);
 ```
 
 Checks if an array consists only of scalar values or not.
@@ -33,7 +33,7 @@ Checks if an array consists only of scalar values or not.
 ### getChanges
 
 ```php
-\Simbiat\Arrays\Checkers::getChanges(array $old, array $new);
+\Simbiat\ArrayHelpers\Checkers::getChanges(array $old, array $new);
 ```
 
 Get list of changes in the new array compared to the old one. Result will be an array looking like this:
@@ -60,7 +60,7 @@ Functions to convert something to something else.
 ### multiToSingle
 
 ```php
-\Simbiat\Arrays\Converters::multiToSingle(array $old_array, string $key_to_save);
+\Simbiat\ArrayHelpers\Converters::multiToSingle(array $old_array, string $key_to_save);
 ```
 
 Converts a multidimensional array to "flat" (or "flatter") one. Essentially a `array_column`, but also uses `array_combine` and `array_keys` to preserve the keys.
@@ -68,7 +68,7 @@ Converts a multidimensional array to "flat" (or "flatter") one. Essentially a `a
 ### dbfToArray
 
 ```php
-\Simbiat\Arrays\Converters::dbfToArray(string $file);
+\Simbiat\ArrayHelpers\Converters::dbfToArray(string $file);
 ```
 
 Converts contents of a [DBF](https://en.wikipedia.org/wiki/.dbf) file to an array.
@@ -76,7 +76,7 @@ Converts contents of a [DBF](https://en.wikipedia.org/wiki/.dbf) file to an arra
 ### attributesToArray
 
 ```php
-\Simbiat\Arrays\Converters::attributesToArray(\DOMNode|Node $node, bool $null = true, array $extra_attributes = []);
+\Simbiat\ArrayHelpers\Converters::attributesToArray(\DOMNode|Node $node, bool $null = true, array $extra_attributes = []);
 ```
 
 Converts `\DOMNode` or `\Dom\Node` into an array with a set of attributes, present in the node, as the array's keys. If `$null` is set to `true` empty attributes will be replaced with `null` (instead of empty string). You can also pass a list of attributes in `$extra_attributes`, which will be added to all resulting elements, if they do not have that attribute. Extra attributes are added as either an empty string or a `null` if `$null` is `true`.
@@ -84,7 +84,7 @@ Converts `\DOMNode` or `\Dom\Node` into an array with a set of attributes, prese
 ### toMultiArray
 
 ```php
-\Simbiat\Arrays\Converters::toMultiArray(array $array, array $keys);
+\Simbiat\ArrayHelpers\Converters::toMultiArray(array $array, array $keys);
 ```
 
 Turns a regular array to a multidimensional one by turning provided keys into one of the columns. It will turn an array like
@@ -123,7 +123,7 @@ if you provide the below array as `$keys`:
 ### arrayToProperties
 
 ```php
-\Simbiat\Arrays\Converters::arrayToProperties(object $object, array $array, array $skip = [], bool $strict = true);
+\Simbiat\ArrayHelpers\Converters::arrayToProperties(object $object, array $array, array $skip = [], bool $strict = true);
 ```
 
 "Converts" an array to an object's properties (just sets their values to those from the array). Useful when you need to populate them based on results from some function, for example, a `SELECT` from database. Only values with string keys will be processed.
@@ -133,7 +133,7 @@ If `$skip` array is passed to the function and a key from `$array` is present th
 ### enumValues
 
 ```php
-\Simbiat\Arrays\Converters::enumValues(string $enum);
+\Simbiat\ArrayHelpers\Converters::enumValues(string $enum);
 ```
 
 Gets either list of cases' values from a backed enum. `$enum` is expected to be something like `\Path\To\Enum::class`.
@@ -141,7 +141,7 @@ Gets either list of cases' values from a backed enum. `$enum` is expected to be 
 ### enumNames
 
 ```php
-\Simbiat\Arrays\Converters::enumNames(string $enum);
+\Simbiat\ArrayHelpers\Converters::enumNames(string $enum);
 ```
 
 Gets either list of cases' names an enum. `$enum` is expected to be something like `\Path\To\Enum::class`.
@@ -153,7 +153,7 @@ Functions that somehow edit the array content.
 ### digitToKey
 
 ```php
-\Simbiat\Arrays\Editors::digitToKey(array $old_array, string $new_key, bool $key_unset = false);
+\Simbiat\ArrayHelpers\Editors::digitToKey(array $old_array, string $new_key, bool $key_unset = false);
 ```
 
 Replaces a multidimensional array's values with values from a specific column. With PHP updates this has become a wrapper for `array_column`, but `$key_unset` set to `true` allows you to remove the chose column after rekeying.
@@ -161,7 +161,7 @@ Replaces a multidimensional array's values with values from a specific column. W
 ### ColumnsConversion
 
 ```php
-\Simbiat\Arrays\Editors::columnsConversion(array $array, array|string $columns, string $type = 'int');
+\Simbiat\ArrayHelpers\Editors::columnsConversion(array $array, array|string $columns, string $type = 'int');
 ```
 
 Allows casting values in a column (or set of columns) to a specific type. Supported values for `$type` are: `int`/`integer`, `bool`/`boolean`, `float`/`double`/`real`, `string`, `array`, `object`. Casting is done by native functions.
@@ -169,7 +169,7 @@ Allows casting values in a column (or set of columns) to a specific type. Suppor
 ### RemoveByValue
 
 ```php
-\Simbiat\Arrays\Editors::removeByValue(array $array, mixed $remove_value, bool $rekey = false);
+\Simbiat\ArrayHelpers\Editors::removeByValue(array $array, mixed $remove_value, bool $rekey = false);
 ```
 
 Simple function that removes all elements with a certain value (`$remove_value`) and optionally re-keys it if `$rekey` is `true (useful for an indexed array, useless for associative ones).
@@ -177,7 +177,7 @@ Simple function that removes all elements with a certain value (`$remove_value`)
 ### setKeyPath
 
 ```php
-\Simbiat\Arrays\Editors::setKeyPath(array $array, array $path, mixed $value);
+\Simbiat\ArrayHelpers\Editors::setKeyPath(array $array, array $path, mixed $value);
 ```
 
 Allows recursively setting a key path based on logic from [StackOverflow](https://stackoverflow.com/a/5821027/2992851). Useful for "generating" arrays of a specific shape or updating existing ones.  
@@ -199,7 +199,7 @@ Parts of the path are created only if they are not present already.
 ### moveToSubarray
 
 ```php
-\Simbiat\Arrays\Editors::moveToSubarray(array $array, string|int $key, array $new_key_path);
+\Simbiat\ArrayHelpers\Editors::moveToSubarray(array $array, string|int $key, array $new_key_path);
 ```
 
 Function to move keys into a subarray. For example, you have a key like `$array['key']`, but you want to remove it and have it as `$array['subarray']['key']` - then use this function. Purely for data formatting.  
@@ -208,7 +208,7 @@ Function to move keys into a subarray. For example, you have a key like `$array[
 ### renameColumn
 
 ```php
-\Simbiat\Arrays\Editors::renameColumn(array $array, string $column, string $key_name);
+\Simbiat\ArrayHelpers\Editors::renameColumn(array $array, string $column, string $key_name);
 ```
 
 Rename a column in a multidimensional array. `$array` is passed by reference.
@@ -220,7 +220,7 @@ Functions to sort arrays (just one for now).
 ### multiArrSort
 
 ```php
-\Simbiat\Arrays\Sorters::multiArrSort(array $array, string $column, bool $desc = false);
+\Simbiat\ArrayHelpers\Sorters::multiArrSort(array $array, string $column, bool $desc = false);
 ```
 
 Function to sort a multidimensional array by values in a column. Can be "reversed" to sort from larger to smaller (descending order), if `$desc` is set to `true`.
@@ -228,7 +228,7 @@ Function to sort a multidimensional array by values in a column. Can be "reverse
 ### recursiveSort
 
 ```php
-\Simbiat\Arrays\Sorters::recursiveSort(array &$array, bool $key = false, bool $desc = false, int $sort_flag = \SORT_REGULAR);
+\Simbiat\ArrayHelpers\Sorters::recursiveSort(array &$array, bool $key = false, bool $desc = false, int $sort_flag = \SORT_REGULAR);
 ```
 
 Function to recursively sort array using `sort`, `rsort`, `ksort` or `krsort` depending on respective values of `$key` and `$desc` arguments.
@@ -240,7 +240,7 @@ Functions to split arrays into parts.
 ### topAndBottom
 
 ```php
-\Simbiat\Arrays\Splitters::topAndBottom(array $array, int $rows = 0);
+\Simbiat\ArrayHelpers\Splitters::topAndBottom(array $array, int $rows = 0);
 ```
 
 Function that splits the array to 2 representing first X and last X rows from it, providing a way to get "Top X" and its counterpart. If `$rows` is less than `1` or the array size is less than `$rows * 2`, then function will try to split the array evenly. Resulting array will have `top` and `bottom` keys with respective rows, but if the array has only one element, an exception will be thrown.
@@ -248,7 +248,7 @@ Function that splits the array to 2 representing first X and last X rows from it
 ### splitByKey
 
 ```php
-\Simbiat\Arrays\Splitters::splitByKey(array $array, string $column_key, array $new_keys = [], bool $keep_key = false, bool $case_insensitive = false);
+\Simbiat\ArrayHelpers\Splitters::splitByKey(array $array, string $column_key, array $new_keys = [], bool $keep_key = false, bool $case_insensitive = false);
 ```
 
 Splits a multidimensional array by values from a column. Useful to reduce the number of travels to a database. Instead of doing 2+ queries separately, we do just one query and then split the results to several arrays in code. Turns an array like this:
