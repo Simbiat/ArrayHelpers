@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace Simbiat\ArrayHelpers;
 
 use Dom\Node;
+use Simbiat\StringHelpers\Sanitize;
 use function count;
 use function is_string;
 
@@ -13,7 +14,7 @@ use function is_string;
 class Converters
 {
     /**
-     * Function allows turning multidimensional arrays to regular ones by "overwriting" each "row" with value from chosen column.
+     * Function allows turning multidimensional arrays to regular ones by "overwriting" each "row" with a value from the chosen column.
      *
      * @param array  $old_array   Array to process
      * @param string $key_to_save Column name to use
@@ -22,13 +23,13 @@ class Converters
      */
     public static function multiToSingle(array $old_array, string $key_to_save): array
     {
-        if (\preg_match('/^\s*$/', $key_to_save)) {
+        if (Sanitize::whiteString($key_to_save)) {
             return [];
         }
         return \array_combine(\array_keys($old_array), \array_column($old_array, $key_to_save));
     }
     
-    #Supressing inspection for functions related to DBase, since we have our own handler logic for this
+    #Suppressing inspection for functions related to DBase, since we have our own handler logic for this
     /** @noinspection PhpUndefinedFunctionInspection */
     /**
      * Function to convert a DBASE (.dbf) file to array
