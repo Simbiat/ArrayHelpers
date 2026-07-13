@@ -184,4 +184,19 @@ class Converters
         }
         throw new \InvalidArgumentException($enum.' is not an enum');
     }
+    
+    /**
+     * Flatten a multidimensional array recursively.
+     * @param array $array Array to flatten.
+     *
+     * @return array
+     */
+    public static function flatten(array $array): array
+    {
+        $flat = [];
+        \array_walk_recursive($array, static function (string $item) use (&$flat): void {
+            $flat[] = $item;
+        });
+        return $flat;
+    }
 }

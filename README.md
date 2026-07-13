@@ -146,6 +146,14 @@ Gets either list of cases' values from a backed enum. `$enum` is expected to be 
 
 Gets either list of cases' names an enum. `$enum` is expected to be something like `\Path\To\Enum::class`.
 
+### flatten
+
+```php
+\Simbiat\ArrayHelpers\Converters::flatten(array $array);
+```
+
+Flatten a multidimensional array recursively.
+
 ## Editors
 
 Functions that somehow edit the array content.
