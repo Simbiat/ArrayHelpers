@@ -1,5 +1,6 @@
 <?php
-declare(strict_types = 1);
+
+declare(strict_types=1);
 
 namespace Simbiat\ArrayHelpers;
 
@@ -22,19 +23,19 @@ class Sorters
             return [];
         }
         if ($desc) {
-            #Order in DESC
+            // Order in DESC
             \uasort($array, static function ($a, $b) use (&$column) {
                 return $b[$column] <=> $a[$column];
             });
         } else {
-            #Order in ASC
+            // Order in ASC
             \uasort($array, static function ($a, $b) use (&$column) {
                 return $a[$column] <=> $b[$column];
             });
         }
         return $array;
     }
-    
+
     /**
      * Recursively sort array (using `sort`, `rsort`, `ksort` or `krsort`)
      * @param array $array     Array to sort

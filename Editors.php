@@ -1,5 +1,6 @@
 <?php
-declare(strict_types = 1);
+
+declare(strict_types=1);
 
 namespace Simbiat\ArrayHelpers;
 
@@ -26,9 +27,9 @@ class Editors
         if (empty($new_key)) {
             throw new \InvalidArgumentException('Empty key provided to DigitToKey function.');
         }
-        #Setting the empty array as a precaution
+        // Setting the empty array as a precaution
         $new_array = \array_column($old_array, null, $new_key);
-        #Removing the old column
+        // Removing the old column
         if ($key_unset) {
             foreach ($new_array as $key => $item) {
                 unset($new_array[$key][$new_key]);
@@ -36,7 +37,7 @@ class Editors
         }
         return $new_array;
     }
-    
+
     /**
      * Function casts a set of selected columns' values to the chosen type (INT by default). Initially created due to MySQL enforcing string values instead of integers in a lot of cases.
      * @param array        $array   Array to process
@@ -47,7 +48,7 @@ class Editors
      */
     public static function columnsConversion(array $array, array|string $columns, #[ExpectedValues(['int', 'integer', 'bool', 'boolean', 'float', 'double', 'real', 'string', 'array', 'object'])] string $type = 'int'): array
     {
-        #Checking values
+        // Checking values
         if (empty($columns)) {
             throw new \InvalidArgumentException('Empty array provided to ColumnsToInt function.');
         }
@@ -57,11 +58,11 @@ class Editors
         if (!is_array($columns)) {
             throw new \InvalidArgumentException('Columns provided to ColumnsToInt function are neither string nor array.');
         }
-        #Iterrating the array provided
+        // Iterating the array provided
         foreach ($array as $key => $value) {
-            #Iterrating columns' list provided
+            // Iterating columns' list provided
             foreach ($columns as $column) {
-                #Casting element based on the type
+                // Casting element based on the type
                 $array[$key][$column] = match ($type) {
                     'int', 'integer' => (int)$value[$column],
                     'bool', 'boolean' => (bool)$value[$column],
@@ -75,7 +76,7 @@ class Editors
         }
         return $array;
     }
-    
+
     /**
      * Simple function that removes all elements with a certain value and optionally re-keys it (useful for an indexed array, useless for associative ones)
      *
@@ -87,20 +88,20 @@ class Editors
      */
     public static function removeByValue(array $array, mixed $remove_value, bool $rekey = false): array
     {
-        #Iterrating the array provided
+        // Iterating the array provided
         foreach ($array as $key => $value) {
-            #Compare either strictly or not, depending on the flag provided
+            // Compare either strictly or not, depending on the flag provided
             if ($value === $remove_value) {
                 unset($array[$key]);
             }
         }
-        #Rekey the array
+        // Rekey the array
         if ($rekey) {
             $array = \array_values($array);
         }
         return $array;
     }
-    
+
     /**
      * Function to move keys into a subarray. For example, you have a key like $array['key'], but you want to remove it and have it as $array['subarray']['key'] - then use this function. Purely for data formatting.
      *
@@ -112,15 +113,15 @@ class Editors
      */
     public static function moveToSubarray(array &$array, string|int $key, array $new_key_path): void
     {
-        #Modify only if the key exists
+        // Modify only if the key exists
         if (array_key_exists($key, $array)) {
-            #Copy the value
+            // Copy the value
             self::setKeyPath($array, $new_key_path, $array[$key]);
-            #Remove the original key
+            // Remove the original key
             unset($array[$key]);
         }
     }
-    
+
     /**
      * Allows recursively setting a key path. Based on https://stackoverflow.com/a/5821027/2992851
      * @param array $array Array to process (passed by reference)
@@ -141,7 +142,7 @@ class Editors
             self::setKeyPath($array[$key], $path, $value);
         }
     }
-    
+
     /**
      * Rename a column in a multidimensional array
      *

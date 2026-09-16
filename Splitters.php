@@ -1,5 +1,6 @@
 <?php
-declare(strict_types = 1);
+
+declare(strict_types=1);
 
 namespace Simbiat\ArrayHelpers;
 
@@ -25,7 +26,7 @@ class Splitters
         if (count($array) === 1) {
             throw new \UnexpectedValueException('Array provided to `topAndBottom` function contains only 1 element.');
         }
-        #If the number of rows sent is <=0 or the number of elements is lower than the number of rows x2, attempt to split evenly
+        // If the number of rows sent is <=0 or the number of elements is lower than the number of rows x2, attempt to split evenly
         if ($rows <= 0 || count($array) < ($rows * 2)) {
             $rows = (int)\floor(count($array) / 2);
         }
@@ -33,7 +34,7 @@ class Splitters
         $new_array['bottom'] = \array_reverse(array_slice($array, -$rows, $rows));
         return $new_array;
     }
-    
+
     /**
      * Useful to reduce the number of travels to a database. Instead of doing 2+ queries separately, we do just 1 query and then split the results to several arrays in code.
      * If required, you can send a list of keys that you expect, which can work as a filter.
@@ -48,9 +49,9 @@ class Splitters
      */
     public static function splitByKey(array $array, string $column_key, array $new_keys = [], bool $keep_key = false, bool $case_insensitive = false): array
     {
-        #Predefine the empty array
+        // Predefine the empty array
         $new_array = [];
-        #Checking values
+        // Checking values
         if (empty($array)) {
             return [];
         }
@@ -61,7 +62,7 @@ class Splitters
             $new_keys = \array_unique(\array_column($array, $column_key));
             \asort($new_keys, \SORT_NATURAL);
         }
-        #If we use case-insensitive comparison, we need to ensure standardized keys and lack of duplicates
+        // If we use case-insensitive comparison, we need to ensure standardized keys and lack of duplicates
         if ($case_insensitive) {
             foreach ($new_keys as $key => $value) {
                 if (!\is_numeric($value)) {
@@ -70,7 +71,7 @@ class Splitters
             }
             $new_keys = \array_unique($new_keys, \SORT_NATURAL);
         }
-        #Prepare an empty array
+        // Prepare an empty array
         foreach ($new_keys as $arr_key => $new_key) {
             if (\in_array($new_key, [null, false, '', []], true)) {
                 throw new \UnexpectedValueException('New key with index value \''.$arr_key.'\' is empty and cannot be used as key for new array by splitByKey function.');
@@ -89,15 +90,15 @@ class Splitters
         }
         foreach ($new_array as $key => $value) {
             foreach ($array as $item) {
-                #Standardize keys, in case we are using case-insensitive comparison
+                // Standardize keys, in case we are using case-insensitive comparison
                 if ($case_insensitive && is_string($item[$column_key]) && is_string($key)) {
                     $key_to_compare = mb_strtolower($item[$column_key], 'UTF-8');
                 } else {
                     $key_to_compare = (string)$item[$column_key];
                 }
-                #Compare values. Need to force $key to be a string, because if a *value* was an integer, PHP will automatically treat the key as one, and not as a string with numeric values
+                // Compare values. Need to force $key to be a string, because if a *value* was an integer, PHP will automatically treat the key as one, and not as a string with numeric values
                 if ($key_to_compare === (string)$key) {
-                    #Remove the column key, since it's not required after this
+                    // Remove the column key, since it's not required after this
                     if (!$keep_key) {
                         unset($item[$column_key]);
                     }

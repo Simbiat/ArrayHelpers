@@ -1,5 +1,6 @@
 <?php
-declare(strict_types = 1);
+
+declare(strict_types=1);
 
 namespace Simbiat\ArrayHelpers;
 
@@ -22,9 +23,9 @@ class Checkers
      */
     public static function isMultiDimensional(array $array, bool $equal_length = false, bool $all_scalar = false): bool
     {
-        #Check if multidimensional
+        // Check if multidimensional
         if (count(\array_filter(\array_values($array), '\is_array')) === count($array)) {
-            #Check if all child arrays have the same length
+            // Check if all child arrays have the same length
             if ($equal_length) {
                 if (count(\array_unique(\array_map('\count', $array))) !== 1) {
                     throw new \UnexpectedValueException('Not all child arrays have same length.');
@@ -33,13 +34,13 @@ class Checkers
             }
             return true;
         }
-        #Check that all values are scalars
+        // Check that all values are scalars
         if ($all_scalar && !self::isAllScalar($array)) {
             throw new \UnexpectedValueException('Array contains both scalar and non-scalar values.');
         }
         return false;
     }
-    
+
     /**
      * Check if an array is associative
      *
@@ -51,7 +52,7 @@ class Checkers
     {
         return \array_any(\array_keys($array), static fn($key) => is_string($key));
     }
-    
+
     /**
      * Check if all values of an array are scalar
      *
@@ -61,10 +62,10 @@ class Checkers
      */
     public static function isAllScalar(array $array): bool
     {
-        #Check that all values are scalars
+        // Check that all values are scalars
         return !\array_any($array, static fn($value) => !\is_scalar($value));
     }
-    
+
     /**
      * Get list of changes in the new array compared to the old one
      * @param array $old
@@ -80,7 +81,7 @@ class Checkers
                 if ($new[$key] !== $value) {
                     $changes[$key] = ['from' => $value, 'to' => $new[$key]];
                 }
-                #Remove the key to shorten next loop
+                // Remove the key to shorten next loop
                 unset($new[$key]);
             } else {
                 $changes[$key] = ['from' => $value, 'to' => null];
