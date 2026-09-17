@@ -24,10 +24,10 @@ class Checkers
     public static function isMultiDimensional(array $array, bool $equal_length = false, bool $all_scalar = false): bool
     {
         // Check if multidimensional
-        if (count(\array_filter(\array_values($array), '\is_array')) === count($array)) {
+        if (\count(\array_filter(\array_values($array), '\is_array')) === \count($array)) {
             // Check if all child arrays have the same length
             if ($equal_length) {
-                if (count(\array_unique(\array_map('\count', $array))) !== 1) {
+                if (\count(\array_unique(\array_map('\count', $array))) !== 1) {
                     throw new \UnexpectedValueException('Not all child arrays have same length.');
                 }
                 return true;
@@ -50,7 +50,7 @@ class Checkers
      */
     public static function isAssociative(array $array): bool
     {
-        return \array_any(\array_keys($array), static fn($key) => is_string($key));
+        return \array_any(\array_keys($array), static fn($key) => \is_string($key));
     }
 
     /**

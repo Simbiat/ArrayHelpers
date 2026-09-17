@@ -52,10 +52,10 @@ class Editors
         if (empty($columns)) {
             throw new \InvalidArgumentException('Empty array provided to ColumnsToInt function.');
         }
-        if (is_string($columns)) {
+        if (\is_string($columns)) {
             $columns = [$columns];
         }
-        if (!is_array($columns)) {
+        if (!\is_array($columns)) {
             throw new \InvalidArgumentException('Columns provided to ColumnsToInt function are neither string nor array.');
         }
         // Iterating the array provided
@@ -64,12 +64,12 @@ class Editors
             foreach ($columns as $column) {
                 // Casting element based on the type
                 $array[$key][$column] = match ($type) {
-                    'int', 'integer' => (int)$value[$column],
-                    'bool', 'boolean' => (bool)$value[$column],
-                    'float', 'double', 'real' => (float)$value[$column],
-                    'string' => (string)$value[$column],
-                    'array' => (array)$value[$column],
-                    'object' => (object)$value[$column],
+                    'int', 'integer' => (int) $value[$column],
+                    'bool', 'boolean' => (bool) $value[$column],
+                    'float', 'double', 'real' => (float) $value[$column],
+                    'string' => (string) $value[$column],
+                    'array' => (array) $value[$column],
+                    'object' => (object) $value[$column],
                     default => null,
                 };
             }
@@ -114,7 +114,7 @@ class Editors
     public static function moveToSubarray(array &$array, string|int $key, array $new_key_path): void
     {
         // Modify only if the key exists
-        if (array_key_exists($key, $array)) {
+        if (\array_key_exists($key, $array)) {
             // Copy the value
             self::setKeyPath($array, $new_key_path, $array[$key]);
             // Remove the original key
@@ -136,7 +136,7 @@ class Editors
         if (empty($path)) {
             $array[$key] = $value;
         } else {
-            if (!array_key_exists($key, $array) || !is_array($array[$key])) {
+            if (!\array_key_exists($key, $array) || !\is_array($array[$key])) {
                 $array[$key] = [];
             }
             self::setKeyPath($array[$key], $path, $value);

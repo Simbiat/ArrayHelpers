@@ -23,15 +23,15 @@ class Splitters
         if (empty($array)) {
             return ['top' => [], 'bottom' => []];
         }
-        if (count($array) === 1) {
+        if (\count($array) === 1) {
             throw new \UnexpectedValueException('Array provided to `topAndBottom` function contains only 1 element.');
         }
         // If the number of rows sent is <=0 or the number of elements is lower than the number of rows x2, attempt to split evenly
-        if ($rows <= 0 || count($array) < ($rows * 2)) {
-            $rows = (int)\floor(count($array) / 2);
+        if ($rows <= 0 || \count($array) < ($rows * 2)) {
+            $rows = (int) \floor(\count($array) / 2);
         }
-        $new_array['top'] = array_slice($array, 0, $rows);
-        $new_array['bottom'] = \array_reverse(array_slice($array, -$rows, $rows));
+        $new_array['top'] = \array_slice($array, 0, $rows);
+        $new_array['bottom'] = \array_reverse(\array_slice($array, -$rows, $rows));
         return $new_array;
     }
 
@@ -66,7 +66,7 @@ class Splitters
         if ($case_insensitive) {
             foreach ($new_keys as $key => $value) {
                 if (!\is_numeric($value)) {
-                    $new_keys[$key] = mb_strtolower($value, 'UTF-8');
+                    $new_keys[$key] = \mb_strtolower($value, 'UTF-8');
                 }
             }
             $new_keys = \array_unique($new_keys, \SORT_NATURAL);
@@ -77,10 +77,10 @@ class Splitters
                 throw new \UnexpectedValueException('New key with index value \''.$arr_key.'\' is empty and cannot be used as key for new array by splitByKey function.');
             }
             if (\is_int($new_key)) {
-                $new_array[(string)$new_key] = [];
-            } elseif (is_string($new_key)) {
+                $new_array[(string) $new_key] = [];
+            } elseif (\is_string($new_key)) {
                 if ($case_insensitive) {
-                    $new_array[mb_strtolower($new_key, 'UTF-8')] = [];
+                    $new_array[\mb_strtolower($new_key, 'UTF-8')] = [];
                 } else {
                     $new_array[$new_key] = [];
                 }
@@ -91,13 +91,13 @@ class Splitters
         foreach ($new_array as $key => $value) {
             foreach ($array as $item) {
                 // Standardize keys, in case we are using case-insensitive comparison
-                if ($case_insensitive && is_string($item[$column_key]) && is_string($key)) {
-                    $key_to_compare = mb_strtolower($item[$column_key], 'UTF-8');
+                if ($case_insensitive && \is_string($item[$column_key]) && \is_string($key)) {
+                    $key_to_compare = \mb_strtolower($item[$column_key], 'UTF-8');
                 } else {
-                    $key_to_compare = (string)$item[$column_key];
+                    $key_to_compare = (string) $item[$column_key];
                 }
                 // Compare values. Need to force $key to be a string, because if a *value* was an integer, PHP will automatically treat the key as one, and not as a string with numeric values
-                if ($key_to_compare === (string)$key) {
+                if ($key_to_compare === (string) $key) {
                     // Remove the column key, since it's not required after this
                     if (!$keep_key) {
                         unset($item[$column_key]);

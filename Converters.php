@@ -49,20 +49,20 @@ class Converters
         // Setting the empty array as a precaution
         $array = [];
         // Open the file for reading
-        $dbf = dbase_open($file, 0);
+        $dbf = \dbase_open($file, 0);
         if ($dbf !== false) {
             // Get the number of records in the file
-            $record_numbers = dbase_numrecords($dbf);
+            $record_numbers = \dbase_numrecords($dbf);
             if ($record_numbers === false) {
                 throw new \RuntimeException('Failed to get number of records in \''.$file.'\' provided to dbfToArray function.');
             }
             // Iterrate the records
             for ($iter = 1; $iter <= $record_numbers; $iter++) {
                 // Add record to array
-                $array[] = dbase_get_record_with_names($dbf, $iter);
+                $array[] = \dbase_get_record_with_names($dbf, $iter);
             }
             // Close file
-            dbase_close($dbf);
+            \dbase_close($dbf);
         } else {
             throw new \RuntimeException('Failed to open \''.$file.'\' provided to dbfToArray function.');
         }
@@ -92,7 +92,7 @@ class Converters
             }
         }
         // Add any additional attributes that are expected
-        if (count($extra_attributes) > 0) {
+        if (\count($extra_attributes) > 0) {
             foreach ($extra_attributes as $attribute) {
                 if (!\array_key_exists($attribute, $result)) {
                     if ($null) {
@@ -118,7 +118,7 @@ class Converters
      */
     public static function toMultiArray(array $array, array $keys): array
     {
-        if (count($keys) !== 2) {
+        if (\count($keys) !== 2) {
             throw new \UnexpectedValueException('Number of keys provided does not equal 2');
         }
         $new_array = [];
@@ -143,7 +143,7 @@ class Converters
         // Iterate the array
         foreach ($array as $key => $value) {
             // Check that a key is string and not in the list of keys to skip
-            if (is_string($key) && !\in_array($key, $skip, true)) {
+            if (\is_string($key) && !\in_array($key, $skip, true)) {
                 // Throw an error if a property does not exist, and we use a strict mode
                 if ($strict && !\property_exists($object, $key)) {
                     throw new \LogicException(\get_class($object).' must have declared `'.$key.'` property.');
