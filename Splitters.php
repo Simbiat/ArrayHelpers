@@ -4,34 +4,37 @@ declare(strict_types=1);
 
 namespace Simbiat\ArrayHelpers;
 
-use function array_slice, count, is_string;
-
 /**
  * Functions that split arrays
  */
-class Splitters
+final class Splitters
 {
     /**
      * Function that splits the array to 2 representing first X and last X rows from it, providing a way to get 'Top X' and its counterpart
-     * @param array $array Array to process.
-     * @param int   $rows  Number of rows to select (from top and bottom separately). Send `0` or negative number to split evenly.
+     *
+     * @param array $to_split Array to process.
+     * @param int   $rows     Number of rows to select (from top and bottom separately). Send `0` or negative number to split evenly.
      *
      * @return array
      */
-    public static function topAndBottom(array $array, int $rows = 0): array
+    public static function topAndBottom(array $to_split, int $rows = 0): array
     {
-        if (empty($array)) {
+        if (empty($to_split)) {
             return ['top' => [], 'bottom' => []];
         }
-        if (\count($array) === 1) {
+        if (\count($to_split) === 1) {
             throw new \UnexpectedValueException('Array provided to `topAndBottom` function contains only 1 element.');
         }
         // If the number of rows sent is <=0 or the number of elements is lower than the number of rows x2, attempt to split evenly
-        if ($rows <= 0 || \count($array) < ($rows * 2)) {
-            $rows = (int) \floor(\count($array) / 2);
+        if (
+            $rows <= 0
+            || \count($to_split) < $rows * 2
+        ) {
+            $rows = (int) \floor(\count($to_split) / 2);
         }
-        $new_array['top'] = \array_slice($array, 0, $rows);
-        $new_array['bottom'] = \array_reverse(\array_slice($array, -$rows, $rows));
+        $new_array['top'] = \array_slice($to_split, 0, $rows);
+        $new_array['bottom'] = \array_reverse(\array_slice($to_split, -$rows, $rows));
+
         return $new_array;
     }
 
@@ -39,7 +42,7 @@ class Splitters
      * Useful to reduce the number of travels to a database. Instead of doing 2+ queries separately, we do just 1 query and then split the results to several arrays in code.
      * If required, you can send a list of keys that you expect, which can work as a filter.
      *
-     * @param array  $array            Array to process.
+     * @param array  $to_split         Array to process.
      * @param string $column_key       Column key to split by.
      * @param array  $new_keys         Optional list of expected new keys (that is values from the column). Can be used to essentially filter results. If empty, unique key values from the array will be used.
      * @param bool   $keep_key         Whether to retain the original key in the resulting array or not
@@ -47,19 +50,19 @@ class Splitters
      *
      * @return array
      */
-    public static function splitByKey(array $array, string $column_key, array $new_keys = [], bool $keep_key = false, bool $case_insensitive = false): array
+    public static function splitByKey(array $to_split, string $column_key, array $new_keys = [], bool $keep_key = false, bool $case_insensitive = false): array
     {
         // Predefine the empty array
         $new_array = [];
         // Checking values
-        if (empty($array)) {
+        if (empty($to_split)) {
             return [];
         }
         if (empty($column_key)) {
             throw new \InvalidArgumentException('Empty key provided to splitByKey function.');
         }
         if (empty($new_keys)) {
-            $new_keys = \array_unique(\array_column($array, $column_key));
+            $new_keys = \array_unique(\array_column($to_split, $column_key));
             \asort($new_keys, \SORT_NATURAL);
         }
         // If we use case-insensitive comparison, we need to ensure standardized keys and lack of duplicates
@@ -89,9 +92,13 @@ class Splitters
             }
         }
         foreach ($new_array as $key => $value) {
-            foreach ($array as $item) {
+            foreach ($to_split as $item) {
                 // Standardize keys, in case we are using case-insensitive comparison
-                if ($case_insensitive && \is_string($item[$column_key]) && \is_string($key)) {
+                if (
+                    $case_insensitive
+                    && \is_string($item[$column_key])
+                    && \is_string($key)
+                ) {
                     $key_to_compare = \mb_strtolower($item[$column_key], 'UTF-8');
                 } else {
                     $key_to_compare = (string) $item[$column_key];
@@ -106,6 +113,7 @@ class Splitters
                 }
             }
         }
+
         return $new_array;
     }
 }
