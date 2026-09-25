@@ -55,22 +55,22 @@ final class Converters
         $array = [];
         // Open the file for reading
         $dbf = \dbase_open($file, 0);
-        if ($dbf !== false) {
-            // Get the number of records in the file
-            $record_numbers = \dbase_numrecords($dbf);
-            if ($record_numbers === false) {
-                throw new \RuntimeException('Failed to get number of records in \''.$file.'\' provided to dbfToArray function.');
-            }
-            // Iterate the records
-            for ($iter = 1; $iter <= $record_numbers; $iter++) {
-                // Add record to array
-                $array[] = \dbase_get_record_with_names($dbf, $iter);
-            }
-            // Close file
-            \dbase_close($dbf);
-        } else {
+        if ($dbf === false) {
             throw new \RuntimeException('Failed to open \''.$file.'\' provided to dbfToArray function.');
         }
+
+        // Get the number of records in the file
+        $record_numbers = \dbase_numrecords($dbf);
+        if ($record_numbers === false) {
+            throw new \RuntimeException('Failed to get number of records in \''.$file.'\' provided to dbfToArray function.');
+        }
+        // Iterate the records
+        for ($iter = 1; $iter <= $record_numbers; $iter++) {
+            // Add record to array
+            $array[] = \dbase_get_record_with_names($dbf, $iter);
+        }
+        // Close file
+        \dbase_close($dbf);
 
         return $array;
     }
@@ -87,7 +87,7 @@ final class Converters
     public static function attributesToArray(\DOMNode|Node $node, bool $null = true, array $extra_attributes = []): array
     {
         $result = [];
-        // Iterrate attributes of the node
+        // Iterate attributes of the node
         foreach ($node->attributes as $attribute_name => $attribute_value) {
             if (
                 $null

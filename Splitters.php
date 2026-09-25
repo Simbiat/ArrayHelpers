@@ -94,23 +94,21 @@ final class Splitters
         foreach ($new_array as $key => $value) {
             foreach ($to_split as $item) {
                 // Standardize keys, in case we are using case-insensitive comparison
-                if (
+                $key_to_compare = 
                     $case_insensitive
                     && \is_string($item[$column_key])
                     && \is_string($key)
-                ) {
-                    $key_to_compare = \mb_strtolower($item[$column_key], 'UTF-8');
-                } else {
-                    $key_to_compare = (string) $item[$column_key];
-                }
+                 ? \mb_strtolower($item[$column_key], 'UTF-8') : (string) $item[$column_key];
                 // Compare values. Need to force $key to be a string, because if a *value* was an integer, PHP will automatically treat the key as one, and not as a string with numeric values
-                if ($key_to_compare === (string) $key) {
-                    // Remove the column key, since it's not required after this
-                    if (!$keep_key) {
-                        unset($item[$column_key]);
-                    }
-                    $new_array[$key][] = $item;
+                if ($key_to_compare !== (string) $key) {
+                    continue;
                 }
+
+                // Remove the column key, since it's not required after this
+                if (!$keep_key) {
+                    unset($item[$column_key]);
+                }
+                $new_array[$key][] = $item;
             }
         }
 
