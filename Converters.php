@@ -15,8 +15,8 @@ final class Converters
     /**
      * Function allows turning multidimensional arrays to regular ones by "overwriting" each "row" with a value from the chosen column.
      *
-     * @param array  $old_array   Array to process
-     * @param string $key_to_save Column name to use
+     * @param array<array> $old_array   Array to process
+     * @param string       $key_to_save Column name to use
      *
      * @return array
      */
@@ -32,7 +32,12 @@ final class Converters
     /**
      * Function to convert a DBASE (.dbf) file to array.
      * Suppressing inspection for functions related to DBase, since we have our own handler logic for this.
+     *
      * @noinspection PhpUndefinedFunctionInspection
+     * phpcs:disable PHPCompatibility.FunctionUse.RemovedFunctions.dbase_openRemoved
+     * phpcs:disable PHPCompatibility.FunctionUse.RemovedFunctions.dbase_numrecordsRemoved
+     * phpcs:disable PHPCompatibility.FunctionUse.RemovedFunctions.dbase_get_record_with_namesRemoved
+     * phpcs:disable PHPCompatibility.FunctionUse.RemovedFunctions.dbase_closeRemoved
      *
      * @param string $file
      *
@@ -159,7 +164,7 @@ final class Converters
                     $strict
                     && !\property_exists($to_update, $key)
                 ) {
-                    throw new \LogicException(\get_class($to_update).' must have declared `'.$key.'` property.');
+                    throw new \LogicException($to_update::class.' must have declared `'.$key.'` property.');
                 }
                 // Set property (or, at least, attempt to)
                 $to_update->{$key} = $value;
@@ -178,7 +183,8 @@ final class Converters
     {
         if (\is_subclass_of($enum, \BackedEnum::class)) {
             return \array_map(
-                static fn(\BackedEnum $case) => $case->value, $enum::cases()
+                static fn(\BackedEnum $case) => $case->value,
+                $enum::cases(),
             );
         }
 
@@ -199,7 +205,8 @@ final class Converters
             || \is_subclass_of($enum, \BackedEnum::class)
         ) {
             return \array_map(
-                static fn(\UnitEnum|\BackedEnum $case) => $case->name, $enum::cases()
+                static fn(\UnitEnum|\BackedEnum $case) => $case->name,
+                $enum::cases(),
             );
         }
 

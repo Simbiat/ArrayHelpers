@@ -1,6 +1,10 @@
 <?php
 
+/** @noinspection PhpPluralMixedCanBeReplacedWithArrayInspection */
+
 declare(strict_types=1);
+
+// phpcs:disable SlevomatCodingStandard.TypeHints.DisallowMixedTypeHint -- some of the function legitimately accept mixed arrays
 
 namespace Simbiat\ArrayHelpers;
 
@@ -12,9 +16,9 @@ final class Checkers
     /**
      * Check if an array is multidimensional
      *
-     * @param array $to_check     Array to check
-     * @param bool  $equal_length Whether to check that all rows are of the same length
-     * @param bool  $all_scalar   Whether to check that all values are scalar
+     * @param array<mixed> $to_check     Array to check
+     * @param bool         $equal_length Whether to check that all rows are of the same length
+     * @param bool         $all_scalar   Whether to check that all values are scalar
      *
      * @return bool
      */
@@ -24,7 +28,7 @@ final class Checkers
         if (\count(\array_filter(\array_values($to_check), '\is_array')) === \count($to_check)) {
             // Check if all child arrays have the same length
             if ($equal_length) {
-                if (\count(\array_unique(\array_map('\count', $to_check))) !== 1) {
+                if (\count(\array_map('\count', \array_unique($to_check))) !== 1) {
                     throw new \UnexpectedValueException('Not all child arrays have same length.');
                 }
 
@@ -47,7 +51,7 @@ final class Checkers
     /**
      * Check if an array is associative
      *
-     * @param array $to_check
+     * @param array<mixed> $to_check
      *
      * @return bool
      */
@@ -59,7 +63,7 @@ final class Checkers
     /**
      * Check if all values of an array are scalar
      *
-     * @param array $to_check Array to check
+     * @param array<mixed> $to_check Array to check
      *
      * @return bool
      */
@@ -72,10 +76,10 @@ final class Checkers
     /**
      * Get list of changes in the new array compared to the old one
      *
-     * @param array $old_array
-     * @param array $new_array
+     * @param array<mixed> $old_array
+     * @param array<mixed> $new_array
      *
-     * @return array
+     * @return array<string, array{from: mixed, to: mixed}>
      */
     public static function getChanges(array $old_array, array $new_array): array
     {
