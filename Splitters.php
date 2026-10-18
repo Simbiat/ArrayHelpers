@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Simbiat\ArrayHelpers;
 
 /**
- * Functions that split arrays
+ * Functions that split arrays.
  */
 final class Splitters
 {
     /**
-     * Function that splits the array to 2 representing first X and last X rows from it, providing a way to get 'Top X' and its counterpart
+     * Function that splits the array to 2 representing first X and last X rows from it, providing a way to get 'Top X' and its counterpart.
      *
      * @param array $to_split Array to process.
      * @param int   $rows     Number of rows to select (from top and bottom separately). Send `0` or negative number to split evenly.
@@ -94,8 +94,8 @@ final class Splitters
         foreach ($new_array as $key => $value) {
             foreach ($to_split as $item) {
                 // Standardize keys, in case we are using case-insensitive comparison
-                $key_to_compare =
-                    $case_insensitive
+                $key_to_compare
+                    = $case_insensitive
                     && \is_string($item[$column_key])
                     && \is_string($key)
                     ? \mb_strtolower($item[$column_key], 'UTF-8')

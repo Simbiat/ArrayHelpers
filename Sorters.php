@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Simbiat\ArrayHelpers;
 
 /**
- * Functions to sort arrays
+ * Functions to sort arrays.
  */
 final class Sorters
 {
     /**
-     * Function to sort a multidimensional array by values in a column. Can be "reversed" to sort from larger to smaller (DESC order)
+     * Function to sort a multidimensional array by values in a column. Can be "reversed" to sort from larger to smaller (DESC order).
      *
      * @param array  $to_sort Array to process
      * @param string $column  Column to sort by
@@ -39,7 +39,7 @@ final class Sorters
     }
 
     /**
-     * Recursively sort array (using `sort`, `rsort`, `ksort` or `krsort`)
+     * Recursively sort array (using `sort`, `rsort`, `ksort` or `krsort`).
      *
      * @param array $to_sort   Array to sort
      * @param bool  $key       Whether to sort by key or by value

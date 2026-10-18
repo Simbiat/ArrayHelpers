@@ -9,12 +9,12 @@ declare(strict_types=1);
 namespace Simbiat\ArrayHelpers;
 
 /**
- * Functions that check something about arrays
+ * Functions that check something about arrays.
  */
 final class Checkers
 {
     /**
-     * Check if an array is multidimensional
+     * Check if an array is multidimensional.
      *
      * @param array<mixed> $to_check     Array to check
      * @param bool         $equal_length Whether to check that all rows are of the same length
@@ -49,7 +49,7 @@ final class Checkers
     }
 
     /**
-     * Check if an array is associative
+     * Check if an array is associative.
      *
      * @param array<mixed> $to_check
      *
@@ -61,7 +61,7 @@ final class Checkers
     }
 
     /**
-     * Check if all values of an array are scalar
+     * Check if all values of an array are scalar.
      *
      * @param array<mixed> $to_check Array to check
      *
@@ -74,7 +74,7 @@ final class Checkers
     }
 
     /**
-     * Get list of changes in the new array compared to the old one
+     * Get list of changes in the new array compared to the old one.
      *
      * @param array<mixed> $old_array
      * @param array<mixed> $new_array

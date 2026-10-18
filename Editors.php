@@ -7,7 +7,7 @@ namespace Simbiat\ArrayHelpers;
 use JetBrains\PhpStorm\ExpectedValues;
 
 /**
- * Function to edit arrays
+ * Function to edit arrays.
  */
 final class Editors
 {
@@ -79,7 +79,7 @@ final class Editors
     }
 
     /**
-     * Simple function that removes all elements with a certain value and optionally re-keys it (useful for an indexed array, useless for associative ones)
+     * Simple function that removes all elements with a certain value and optionally re-keys it (useful for an indexed array, useless for associative ones).
      *
      * @param array $to_process   Array to process
      * @param mixed $remove_value Value to remove based on
@@ -108,12 +108,12 @@ final class Editors
      * Function to move keys into a subarray. For example, you have a key like $to_process['key'], but you want to remove it and have it as $to_process['subarray']['key'] - then use this function. Purely for data formatting.
      *
      * @param array      $to_process   Array to process
-     * @param string|int $key          Key to move
+     * @param int|string $key          Key to move
      * @param array      $new_key_path Array where each key is part of a new path ($to_process['new', 'path'] is meant to be converted to result in $to_process['new']['path'])
      *
      * @return void
      */
-    public static function moveToSubarray(array &$to_process, string|int $key, array $new_key_path): void
+    public static function moveToSubarray(array &$to_process, int|string $key, array $new_key_path): void
     {
         // Modify only if the key exists
         if (\array_key_exists($key, $to_process)) {
@@ -125,7 +125,7 @@ final class Editors
     }
 
     /**
-     * Allows recursively setting a key path. Based on https://stackoverflow.com/a/5821027/2992851
+     * Allows recursively setting a key path. Based on https://stackoverflow.com/a/5821027/2992851.
      *
      * @param array $to_process Array to process (passed by reference)
      * @param array $path       Array where each key is part of a new path (['new', 'path'] is meant to be converted and result in $to_process['new']['path'])
@@ -150,7 +150,7 @@ final class Editors
     }
 
     /**
-     * Rename a column in a multidimensional array
+     * Rename a column in a multidimensional array.
      *
      * @param array  $to_process Array to process
      * @param string $column     Column name

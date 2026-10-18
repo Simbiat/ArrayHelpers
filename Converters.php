@@ -8,7 +8,7 @@ use Dom\Node;
 use Simbiat\StringHelpers\Sanitize;
 
 /**
- * Functions that covert stuff to/from arrays
+ * Functions that covert stuff to/from arrays.
  */
 final class Converters
 {
@@ -65,7 +65,7 @@ final class Converters
             throw new \RuntimeException('Failed to get number of records in \''.$file.'\' provided to dbfToArray function.');
         }
         // Iterate the records
-        for ($iter = 1; $iter <= $record_numbers; $iter++) {
+        for ($iter = 1; $iter <= $record_numbers; ++$iter) {
             // Add record to array
             $array[] = \dbase_get_record_with_names($dbf, $iter);
         }
@@ -78,7 +78,7 @@ final class Converters
     /**
      * Function to convert DOMNode into an array with a set of attributes, present in the node, as the array's keys.
      *
-     * @param \DOMNode|\Dom\Node $node             Node to process
+     * @param \Dom\Node|\DOMNode $node             Node to process
      * @param bool               $null             Whether to replace empty strings with `null`
      * @param array              $extra_attributes List of attributes to add as either `null` (if `$null` is `true`) or empty string, if the attribute is missing
      *
@@ -120,7 +120,7 @@ final class Converters
     }
 
     /**
-     * Convert a regular array into a multidimensional one by turning provided keys into one of the columns
+     * Convert a regular array into a multidimensional one by turning provided keys into one of the columns.
      *
      * @param array $to_convert Array to process.
      * @param array $keys       New keys' names. Has to be an array of 2 strings or integer elements.
@@ -141,7 +141,7 @@ final class Converters
     }
 
     /**
-     * Convert an array to object properties
+     * Convert an array to object properties.
      *
      * @param object $to_update  Object to update.
      * @param array  $properties Array of properties. Only values with string keys will be processed.
@@ -173,7 +173,7 @@ final class Converters
     }
 
     /**
-     * Get values of a backed enum's cases
+     * Get values of a backed enum's cases.
      *
      * @param string $enum Enum to get values from
      *
@@ -192,7 +192,7 @@ final class Converters
     }
 
     /**
-     * Get names of an enum's cases
+     * Get names of an enum's cases.
      *
      * @param string $enum Enum to get values from
      *
@@ -205,7 +205,7 @@ final class Converters
             || \is_subclass_of($enum, \BackedEnum::class)
         ) {
             return \array_map(
-                static fn(\UnitEnum|\BackedEnum $case) => $case->name,
+                static fn(\BackedEnum|\UnitEnum $case) => $case->name,
                 $enum::cases(),
             );
         }
