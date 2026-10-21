@@ -23,14 +23,15 @@ final class Sorters
         if (empty($column)) {
             return [];
         }
+
         if ($desc) {
             // Order in DESC
-            \uasort($to_sort, static function ($a, $b) use (&$column) {
+            \uasort($to_sort, static function (array $a, array $b) use (&$column): int {
                 return $b[$column] <=> $a[$column];
             });
         } else {
             // Order in ASC
-            \uasort($to_sort, static function ($a, $b) use (&$column) {
+            \uasort($to_sort, static function (array $a, array $b) use (&$column): int {
                 return $a[$column] <=> $b[$column];
             });
         }
@@ -55,6 +56,7 @@ final class Sorters
                 self::recursiveSort($value, $key, $desc, $sort_flag);
             }
         }
+
         unset($value);
         if ($key) {
             if ($desc) {

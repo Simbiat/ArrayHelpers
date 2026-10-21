@@ -19,12 +19,14 @@ final class Splitters
      */
     public static function topAndBottom(array $to_split, int $rows = 0): array
     {
-        if (empty($to_split)) {
+        if ($to_split === []) {
             return ['top' => [], 'bottom' => []];
         }
+
         if (\count($to_split) === 1) {
             throw new \UnexpectedValueException('Array provided to `topAndBottom` function contains only 1 element.');
         }
+
         // If the number of rows sent is <=0 or the number of elements is lower than the number of rows x2, attempt to split evenly
         if (
             $rows <= 0
@@ -32,6 +34,7 @@ final class Splitters
         ) {
             $rows = (int) \floor(\count($to_split) / 2);
         }
+
         $new_array['top'] = \array_slice($to_split, 0, $rows);
         $new_array['bottom'] = \array_reverse(\array_slice($to_split, -$rows, $rows));
 
@@ -55,16 +58,19 @@ final class Splitters
         // Predefine the empty array
         $new_array = [];
         // Checking values
-        if (empty($to_split)) {
+        if ($to_split === []) {
             return [];
         }
+
         if (empty($column_key)) {
             throw new \InvalidArgumentException('Empty key provided to splitByKey function.');
         }
-        if (empty($new_keys)) {
+
+        if ($new_keys === []) {
             $new_keys = \array_unique(\array_column($to_split, $column_key));
             \asort($new_keys, \SORT_NATURAL);
         }
+
         // If we use case-insensitive comparison, we need to ensure standardized keys and lack of duplicates
         if ($case_insensitive) {
             foreach ($new_keys as $key => $value) {
@@ -72,13 +78,16 @@ final class Splitters
                     $new_keys[$key] = \mb_strtolower($value, 'UTF-8');
                 }
             }
+
             $new_keys = \array_unique($new_keys, \SORT_NATURAL);
         }
+
         // Prepare an empty array
         foreach ($new_keys as $arr_key => $new_key) {
-            if (\in_array($new_key, [null, false, '', []], true)) {
-                throw new \UnexpectedValueException('New key with index value \''.$arr_key.'\' is empty and cannot be used as key for new array by splitByKey function.');
+            if (\in_array($new_key, [null, false, '', []], strict: true)) {
+                throw new \UnexpectedValueException("New key with index value '".$arr_key."' is empty and cannot be used as key for new array by splitByKey function.");
             }
+
             if (\is_int($new_key)) {
                 $new_array[(string) $new_key] = [];
             } elseif (\is_string($new_key)) {
@@ -88,9 +97,10 @@ final class Splitters
                     $new_array[$new_key] = [];
                 }
             } else {
-                throw new \UnexpectedValueException('New key with index value \''.$arr_key.'\' is neither string nor integer and cannot be used as key for new array by splitByKey function.');
+                throw new \UnexpectedValueException("New key with index value '".$arr_key."' is neither string nor integer and cannot be used as key for new array by splitByKey function.");
             }
         }
+
         foreach ($new_array as $key => $value) {
             foreach ($to_split as $item) {
                 // Standardize keys, in case we are using case-insensitive comparison
@@ -109,6 +119,7 @@ final class Splitters
                 if (!$keep_key) {
                     unset($item[$column_key]);
                 }
+
                 $new_array[$key][] = $item;
             }
         }

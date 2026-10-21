@@ -25,8 +25,9 @@ final class Editors
         if (empty($new_key)) {
             throw new \InvalidArgumentException('Empty key provided to DigitToKey function.');
         }
+
         // Setting the empty array as a precaution
-        $new_array = \array_column($old_array, null, $new_key);
+        $new_array = \array_column($old_array, column_key: null, index_key: $new_key);
         // Removing the old column
         if ($key_unset) {
             foreach ($new_array as $key => $item) {
@@ -52,12 +53,15 @@ final class Editors
         if (empty($columns)) {
             throw new \InvalidArgumentException('Empty array provided to ColumnsToInt function.');
         }
+
         if (\is_string($columns)) {
             $columns = [$columns];
         }
+
         if (!\is_array($columns)) {
             throw new \InvalidArgumentException('Columns provided to ColumnsToInt function are neither string nor array.');
         }
+
         // Iterating the array provided
         foreach ($to_process as $key => $value) {
             // Iterating columns' list provided
@@ -96,9 +100,10 @@ final class Editors
                 unset($to_process[$key]);
             }
         }
+
         // Rekey the array
         if ($rekey) {
-            $to_process = \array_values($to_process);
+            return \array_values($to_process);
         }
 
         return $to_process;
@@ -136,15 +141,16 @@ final class Editors
     public static function setKeyPath(array &$to_process, array $path, mixed $value): void
     {
         $key = \array_shift($path);
-        if (empty($path)) {
+        if ($path === []) {
             $to_process[$key] = $value;
         } else {
             if (
-                !\array_key_exists($key, $to_process)
+                !\array_key_exists((string) $key, $to_process)
                 || !\is_array($to_process[$key])
             ) {
                 $to_process[$key] = [];
             }
+
             self::setKeyPath($to_process[$key], $path, $value);
         }
     }

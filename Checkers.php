@@ -25,10 +25,10 @@ final class Checkers
     public static function isMultiDimensional(array $to_check, bool $equal_length = false, bool $all_scalar = false): bool
     {
         // Check if multidimensional
-        if (\count(\array_filter(\array_values($to_check), '\is_array')) === \count($to_check)) {
+        if (\count(\array_filter(\array_values($to_check), \is_array(...))) === \count($to_check)) {
             // Check if all child arrays have the same length
             if ($equal_length) {
-                if (\count(\array_map('\count', \array_unique($to_check))) !== 1) {
+                if (\count(\array_map(\count(...), \array_unique($to_check))) !== 1) {
                     throw new \UnexpectedValueException('Not all child arrays have same length.');
                 }
 
@@ -37,6 +37,7 @@ final class Checkers
 
             return true;
         }
+
         // Check that all values are scalars
         if (
             $all_scalar
@@ -57,7 +58,7 @@ final class Checkers
      */
     public static function isAssociative(array $to_check): bool
     {
-        return \array_any(\array_keys($to_check), static fn($key) => \is_string($key));
+        return \array_any(\array_keys($to_check), static fn(int|string $key): bool => \is_string($key));
     }
 
     /**
@@ -70,7 +71,7 @@ final class Checkers
     public static function isAllScalar(array $to_check): bool
     {
         // Check that all values are scalars
-        return !\array_any($to_check, static fn($value) => !\is_scalar($value));
+        return !\array_any($to_check, static fn($value): bool => !\is_scalar($value));
     }
 
     /**
@@ -89,12 +90,14 @@ final class Checkers
                 if ($new_array[$key] !== $value) {
                     $changes[$key] = ['from' => $value, 'to' => $new_array[$key]];
                 }
+
                 // Remove the key to shorten next loop
                 unset($new_array[$key]);
             } else {
                 $changes[$key] = ['from' => $value, 'to' => null];
             }
         }
+
         foreach ($new_array as $key => $value) {
             $changes[$key] = ['from' => null, 'to' => $value];
         }
