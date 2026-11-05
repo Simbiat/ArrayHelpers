@@ -10,38 +10,6 @@ namespace Simbiat\ArrayHelpers;
 final class Splitters
 {
     /**
-     * Function that splits the array to 2 representing first X and last X rows from it, providing a way to get 'Top X' and its counterpart.
-     *
-     * @param array $to_split Array to process.
-     * @param int   $rows     Number of rows to select (from top and bottom separately). Send `0` or negative number to split evenly.
-     *
-     * @return array
-     */
-    public static function topAndBottom(array $to_split, int $rows = 0): array
-    {
-        if ($to_split === []) {
-            return ['top' => [], 'bottom' => []];
-        }
-
-        if (\count($to_split) === 1) {
-            throw new \UnexpectedValueException('Array provided to `topAndBottom` function contains only 1 element.');
-        }
-
-        // If the number of rows sent is <=0 or the number of elements is lower than the number of rows x2, attempt to split evenly
-        if (
-            $rows <= 0
-            || \count($to_split) < $rows * 2
-        ) {
-            $rows = (int) \floor(\count($to_split) / 2);
-        }
-
-        $new_array['top'] = \array_slice($to_split, 0, $rows);
-        $new_array['bottom'] = \array_reverse(\array_slice($to_split, -$rows, $rows));
-
-        return $new_array;
-    }
-
-    /**
      * Useful to reduce the number of travels to a database. Instead of doing 2+ queries separately, we do just 1 query and then split the results to several arrays in code.
      * If required, you can send a list of keys that you expect, which can work as a filter.
      *
@@ -52,6 +20,8 @@ final class Splitters
      * @param bool   $case_insensitive Whether to do case-sensitive comparison of the values or not.
      *
      * @return array
+     *
+     * @throws \InvalidArgumentException
      */
     public static function splitByKey(array $to_split, string $column_key, array $new_keys = [], bool $keep_key = false, bool $case_insensitive = false): array
     {
@@ -110,7 +80,9 @@ final class Splitters
                     && \is_string($key)
                     ? \mb_strtolower($item[$column_key], 'UTF-8')
                     : (string) $item[$column_key];
-                // Compare values. Need to force $key to be a string, because if a *value* was an integer, PHP will automatically treat the key as one, and not as a string with numeric values
+
+                // Compare values
+                /** @psalm-suppress RedundantCast -- Defensive cast to string, because if a *value* was an integer-like, PHP will automatically treat the key as one, and not as a string with numeric values */
                 if ($key_to_compare !== (string) $key) {
                     continue;
                 }
@@ -125,5 +97,36 @@ final class Splitters
         }
 
         return $new_array;
+    }
+
+    /**
+     * Function that splits the array to 2 representing first X and last X rows from it, providing a way to get 'Top X' and its counterpart.
+     *
+     * @param array $to_split Array to process.
+     * @param int   $rows     Number of rows to select (from top and bottom separately). Send `0` or negative number to split evenly.
+     *
+     * @return array
+     *
+     * @throws \UnexpectedValueException
+     */
+    public static function topAndBottom(array $to_split, int $rows = 0): array
+    {
+        if ($to_split === []) {
+            return ['top' => [], 'bottom' => []];
+        }
+
+        if (\count($to_split) === 1) {
+            throw new \UnexpectedValueException('Array provided to `topAndBottom` function contains only 1 element.');
+        }
+
+        // If the number of rows sent is <=0 or the number of elements is lower than the number of rows x2, attempt to split evenly
+        if (
+            $rows <= 0
+            || \count($to_split) < $rows * 2
+        ) {
+            $rows = (int) \floor(\count($to_split) / 2);
+        }
+
+        return ['top' => \array_slice($to_split, 0, $rows), 'bottom' => \array_reverse(\array_slice($to_split, -$rows, $rows))];
     }
 }

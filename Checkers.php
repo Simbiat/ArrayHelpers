@@ -10,70 +10,11 @@ namespace Simbiat\ArrayHelpers;
 
 /**
  * Functions that check something about arrays.
+ *
+ * @api
  */
 final class Checkers
 {
-    /**
-     * Check if an array is multidimensional.
-     *
-     * @param array<mixed> $to_check     Array to check
-     * @param bool         $equal_length Whether to check that all rows are of the same length
-     * @param bool         $all_scalar   Whether to check that all values are scalar
-     *
-     * @return bool
-     */
-    public static function isMultiDimensional(array $to_check, bool $equal_length = false, bool $all_scalar = false): bool
-    {
-        // Check if multidimensional
-        if (\count(\array_filter(\array_values($to_check), \is_array(...))) === \count($to_check)) {
-            // Check if all child arrays have the same length
-            if ($equal_length) {
-                if (\count(\array_map(\count(...), \array_unique($to_check))) !== 1) {
-                    throw new \UnexpectedValueException('Not all child arrays have same length.');
-                }
-
-                return true;
-            }
-
-            return true;
-        }
-
-        // Check that all values are scalars
-        if (
-            $all_scalar
-            && !self::isAllScalar($to_check)
-        ) {
-            throw new \UnexpectedValueException('Array contains both scalar and non-scalar values.');
-        }
-
-        return false;
-    }
-
-    /**
-     * Check if an array is associative.
-     *
-     * @param array<mixed> $to_check
-     *
-     * @return bool
-     */
-    public static function isAssociative(array $to_check): bool
-    {
-        return \array_any(\array_keys($to_check), static fn(int|string $key): bool => \is_string($key));
-    }
-
-    /**
-     * Check if all values of an array are scalar.
-     *
-     * @param array<mixed> $to_check Array to check
-     *
-     * @return bool
-     */
-    public static function isAllScalar(array $to_check): bool
-    {
-        // Check that all values are scalars
-        return !\array_any($to_check, static fn($value): bool => !\is_scalar($value));
-    }
-
     /**
      * Get list of changes in the new array compared to the old one.
      *
@@ -103,5 +44,72 @@ final class Checkers
         }
 
         return $changes;
+    }
+
+    /**
+     * Check if all values of an array are scalar.
+     *
+     * @param array<mixed> $to_check Array to check
+     *
+     * @return bool
+     */
+    public static function isAllScalar(array $to_check): bool
+    {
+        // Check that all values are scalars
+        return !\array_any($to_check, static fn($value): bool => !\is_scalar($value));
+    }
+
+    /**
+     * Check if an array is associative.
+     *
+     * @param array<mixed> $to_check
+     *
+     * @return bool
+     *
+     * @noinspection PhpUnused
+     */
+    public static function isAssociative(array $to_check): bool
+    {
+        return \array_any(\array_keys($to_check), static fn(int|string $key): bool => \is_string($key));
+    }
+
+    /**
+     * Check if an array is multidimensional.
+     *
+     * @param array<mixed> $to_check     Array to check
+     * @param bool         $equal_length Whether to check that all rows are of the same length
+     * @param bool         $all_scalar   Whether to check that all values are scalar
+     *
+     * @return bool
+     *
+     * @noinspection PhpUnused
+     *
+     * @throws \UnexpectedValueException
+     */
+    public static function isMultiDimensional(array $to_check, bool $equal_length = false, bool $all_scalar = false): bool
+    {
+        // Check if multidimensional
+        if (\count(\array_filter(\array_values($to_check), \is_array(...))) === \count($to_check)) {
+            // Check if all child arrays have the same length
+            if ($equal_length) {
+                if (\count(\array_map(\count(...), \array_unique($to_check))) !== 1) {
+                    throw new \UnexpectedValueException('Not all child arrays have same length.');
+                }
+
+                return true;
+            }
+
+            return true;
+        }
+
+        // Check that all values are scalars
+        if (
+            $all_scalar
+            && !self::isAllScalar($to_check)
+        ) {
+            throw new \UnexpectedValueException('Array contains both scalar and non-scalar values.');
+        }
+
+        return false;
     }
 }
